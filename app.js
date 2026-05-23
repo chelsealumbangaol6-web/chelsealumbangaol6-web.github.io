@@ -2102,6 +2102,116 @@ const translationDictionary = {
   "Relevansi Historis": "Historical Relevance",
   "Relevansi SEDAF": "SEDAF Relevance",
   "Lihat SOP & Knowledge Base": "View SOP & Knowledge Base",
+  "Ane tana nggoro, pai mombetana ri bulu.": "Ane tana nggoro, pai mombetana ri bulu.",
+  "Arsip fisik berkode ANRI-KB/1996/JABAR sudah kami digitalisasikan dan diunggah. Silakan diperiksa, statusnya sudah kami set Publik agar BPBD langsung bisa memakai.": "The physical archive coded ANRI-KB/1996/JABAR has been digitized and uploaded. Please review it; its status has been set to Public so BPBD can use it directly.",
+  "Jika tanah berguncang, segeralah pergi ke perbukitan.": "If the ground shakes, immediately go to the hills.",
+  "Mohon verifikasi arsip dari ANRI mengenai curah hujan historis Karawang 1996. Kami perlukan ini untuk mencocokkan indeks limpasan waduk Jatiluhur.": "Please verify the ANRI archive on historical rainfall in Karawang 1996. We need it to correlate the Jatiluhur reservoir overflow index.",
+  "(pergi ke perbukitan/menjauhi pesisir).": "(go to the hills/away from the coast).",
+  "(tanah berguncang/gempa) dan": "(the ground shakes/earthquake) and",
+  "Akses lokasi tidak tersedia. Silakan gunakan tombol \"Gunakan Lokasi Saya\" jika Anda ingin mencoba lagi.": "Location access is unavailable. Please use the \"Use My Location\" button if you want to try again.",
+  "Analisis AI mencocokkan curah hujan tinggi ekstrem saat ini dengan karakteristik banjir besar tahun 2007. Diperkirakan debit sungai Citarum akan meningkat tajam dalam 36 jam ke depan. Direkomendasikan kepada BPBD dan relawan untuk mempersiapkan pintu air Pamanukan dan mengevakuasi balita di zona risiko merah sebelum tengah malam.": "The AI analysis matches current extreme rainfall with the characteristics of the 2007 major flood. The Citarum river discharge is expected to rise sharply in the next 36 hours. BPBD and volunteers are advised to prepare the Pamanukan sluice gates and evacuate infants in the red-risk zone before midnight.",
+  "Anomali Suhu Muka Laut": "Sea Surface Temperature Anomaly",
+  "Anomali Suhu Muka Laut BMKG": "BMKG Sea Surface Temperature Anomaly",
+  "Anomali Terdeteksi": "Anomaly Detected",
+  "Arahan evakuasi akan muncul di sini setelah akses lokasi diberikan.": "Evacuation guidance will appear here once location access is granted.",
+  "Arsip Historis Baru Terunggah: 5 Berkas Laporan dari BPBD & ANRI.": "New Historical Archives Uploaded: 5 report files from BPBD & ANRI.",
+  "Audit Mode": "Audit Mode",
+  "BPBD / Komando Penanganan Darurat": "BPBD / Emergency Response Command",
+  "BPBD/Relawan:": "BPBD/Volunteers:",
+  "Baru saja • Integrasi API BMKG": "Just now • BMKG API Integration",
+  "Belum ada foto": "No photo yet",
+  "Bencana gempa & tsunami Palu 2018 menelan ribuan korban jiwa. Namun warga yang tinggal di kawasan perbukitan dan yang menerapkan pengetahuan leluhur seperti Kayori": "The 2018 Palu earthquake & tsunami claimed thousands of lives. However, residents living in hill areas and those applying ancestral knowledge like Kayori survived.",
+  "Berfungsi sebagai sistem peringatan berbasis memori kolektif—tanpa teknologi—yang mengaktifkan respons warga saat gempa terjadi.": "It functions as an early warning system based on collective memory—without technology—that triggers community response when an earthquake occurs.",
+  "Buka": "Open",
+  "Catatan Lapangan & Tindakan Tim": "Field Notes & Team Actions",
+  "Comma Separated (.CSV)": "Comma Separated (.CSV)",
+  "DASHBOARD": "DASHBOARD",
+  "Darurat": "Emergency",
+  "Diajarkan kepada anak-anak melalui tradisi lisan, sehingga pengetahuan kebencanaan menjadi bagian dari identitas budaya.": "Taught to children through oral tradition, so disaster knowledge becomes part of cultural identity.",
+  "Evakuasi warga terdampak tanggul jebol di Citarum Hilir (Sektor B).": "Evacuation of residents affected by the breached embankment in Citarum Hilir (Sector B).",
+  "Gempa Bumi": "Earthquake",
+  "Gempa Bumi & Tsunami": "Earthquake & Tsunami",
+  "Hak Akses Penuh & Audit Trail.": "Full Access & Audit Trail.",
+  "Hanya Data Publik (Unrestricted)": "Public Data Only (Unrestricted)",
+  "Hanya Membaca Arsip Terbuka.": "Read-only open archives.",
+  "Hukum adat Maluku tentang larangan merusak ekosistem laut sebagai perlindungan pesisir.": "Maluku customary law bans damaging marine ecosystems as coastal protection.",
+  "Indeks Ekstrim (&gt;0.80)": "Extreme Index (>0.80)",
+  "Indeks El-Nino Southern": "El-Nino Southern Index",
+  "Indeks Rendah (&lt;0.50)": "Low Index (<0.50)",
+  "Indeks Sedang (0.50 - 0.79)": "Medium Index (0.50 - 0.79)",
+  "Indikator Anomali Cuaca (BMKG API):": "Weather Anomaly Indicator (BMKG API):",
+  "Indikator anomali curah hujan di Jawa Barat terdeteksi di atas rata-rata 3 dekade (pencocokan arsip 1996, 2007, dan 2014).": "A rainfall anomaly indicator in West Java has been detected above the 3-decade average (matching archives from 1996, 2007, and 2014).",
+  "Instruksi \"pergi ke perbukitan\" menanamkan arah evakuasi yang tepat secara vertikal—menjauhi pantai dan menuju dataran tinggi.": "The instruction \"go to the hills\" instills the correct vertical evacuation direction—away from the coast and toward highlands.",
+  "Internal (BPBD/BMKG)": "Internal (BPBD/BMKG)",
+  "Jawa": "Java",
+  "Kab. Karawang, Kab. Subang, Pesisir Semarang": "Kab. Karawang, Kab. Subang, Northern Semarang Coast",
+  "Kaili (To Kaili)": "Kaili (To Kaili)",
+  "Kalimantan": "Kalimantan",
+  "Kalimat ini adalah instruksi evakuasi mandiri yang disampaikan dalam bentuk syair lisan. Mengandung dua elemen kunci:": "This sentence is a self-evacuation instruction conveyed as oral verse. It contains two key elements:",
+  "Kayori": "Kayori",
+  "Kayori melatih kepekaan warga terhadap sinyal alam—getaran tanah, surutnya air laut tiba-tiba—sebagai tanda bahaya yang harus segera ditindaklanjuti.": "Kayori trains people to be sensitive to natural signals—ground tremors, sudden sea recessions—as danger signs that must be acted on immediately.",
+  "Kekeringan": "Drought",
+  "Kelembaban Tanah (Subang)": "Soil Moisture (Subang)",
+  "Kerentanan banjir rob pesisir utara ekstrim. Naikkan tanggul di 5 titik kritis.": "Extreme north coast tidal flood vulnerability. Raise embankments at 5 critical points.",
+  "Kolonel (TNI) Dr. Haryanto": "Colonel (TNI) Dr. Haryanto",
+  "Kompilasi Bulanan (30 Hari)": "Monthly Compilation (30 Days)",
+  "Kompilasi Mingguan (7 Hari)": "Weekly Compilation (7 Days)",
+  "Kompilasi Tahunan (2026)": "Annual Compilation (2026)",
+  "Kontrol Otorisasi": "Authorization Control",
+  "Kritis (Kering)": "Critical (Dry)",
+  "Kritis / Darurat": "Critical / Emergency",
+  "Laporan Lapangan BPBD Subang Masuk": "BPBD Subang Field Report Received",
+  "Magnitude 7.5 SR · ±4.340 korban jiwa · Ketinggian gelombang hingga 11 meter.": "Magnitude 7.5 SR · ±4,340 casualties · Wave heights up to 11 meters.",
+  "Memuat aplikasi...": "Loading application...",
+  "Menampilkan layer": "Displaying layer",
+  "Menganalisis korelasi curah hujan, pasang surut laut, serta arsip data tata guna lahan sejak tahun 1970 untuk prediksi mikro-regional.": "Analyzing correlations of rainfall, sea tides, and land-use archive data since 1970 for micro-regional prediction.",
+  "Menulis Laporan Lapangan.": "Writing Field Report.",
+  "Menyetujui & Klasifikasi Arsip.": "Approve & Classify Archive.",
+  "Mesin Intelijen AI SEDAF": "SEDAF AI Intelligence Engine",
+  "Metode Analisis": "Analysis Method",
+  "Mitigasi": "Mitigation",
+  "Model korelasi otomatis antara arsip sejarah bencana dan data lapangan.": "Automatic correlation model between historical disaster archives and field data.",
+  "Mulai Berkurang": "Starting to decrease",
+  "Palu Tsunami, 28 September 2018": "Palu Tsunami, September 28, 2018",
+  "Palu, Sulawesi Tengah": "Palu, Central Sulawesi",
+  "Papua": "Papua",
+  "Pendirian dapur umum di Gedung Juang Karawang Barat oleh Kodim.": "Establishment of a public kitchen at Gedung Juang Karawang Barat by Kodim.",
+  "Periode: 17 April 2026 - 17 Mei 2026": "Period: April 17, 2026 - May 17, 2026",
+  "Pranata Mangsa": "Pranata Mangsa",
+  "Prediksi Risiko & Rekomendasi Adaptasi AI": "AI Risk Prediction & Adaptation Recommendations",
+  "Provinsi Jawa Barat & Pantura": "West Java Province & Northern Coast",
+  "Publik (Umum)": "Public (General)",
+  "Publik:": "Public:",
+  "Rahasia (TNI/POLRI)": "Secret (TNI/POLRI)",
+  "Raw JSON Schema (.JSON)": "Raw JSON Schema (.JSON)",
+  "Revisi SOP Citarum diajukan": "Citarum SOP revision proposed",
+  "SEDAF mengarsipkan tradisi Kayori sebagai komponen sistem pengetahuan tacit-to-explicit—mengintegrasikan memori budaya lokal ke dalam SOP mitigasi modern bersama data ilmiah BMKG dan BNPB.": "SEDAF archives the Kayori tradition as a tacit-to-explicit knowledge system component—integrating local cultural memory into modern mitigation SOPs alongside BMKG and BNPB scientific data.",
+  "Sasi Laut": "Sea Sasi",
+  "Segera Hadir": "Coming Soon",
+  "Seluruh Data (Memerlukan Otorisasi)": "All Data (Authorization Required)",
+  "Seluruh instansi aktif mengunggah data dalam kurun 7 hari terakhir. Tidak terdeteksi adanya keterlambatan (bottleneck) validasi data oleh Nasional Admin.": "All agencies have actively uploaded data in the last 7 days. No validation bottlenecks were detected by National Admin.",
+  "Sistem kalender agraris Jawa untuk membaca tanda alam musim dan bencana.": "Java's agrarian calendar system for reading seasonal and disaster signs.",
+  "Status Kelogistikan: 4 Sektor Aman, 1 Sektor Kritis (Pamanukan).": "Logistics status: 4 sectors safe, 1 critical sector (Pamanukan).",
+  "Suku Kaili": "Kaili Tribe",
+  "Sulawesi Tengah": "Central Sulawesi",
+  "Syair ini merekam pengalaman tsunami historis masyarakat Kaili dan melestarikannya lintas generasi tanpa catatan tertulis.": "This poem records the historical tsunami experience of the Kaili people and preserves it across generations without written records.",
+  "Tanah Longsor": "Landslide",
+  "Tersedia": "Available",
+  "Terverifikasi SEDAF": "SEDAF Verified",
+  "Tiap perubahan klasifikasi kerahasiaan (*Rahasia Negara*) dicatat pada Audit Trail terenkripsi secara otomatis.": "Every change in confidentiality classification (*State Secret*) is automatically recorded in the encrypted Audit Trail.",
+  "Tingkat Internal & Rahasia Lapangan": "Internal & Field Secret Level",
+  "Total Kejadian Terpantau di Lapangan: 12 Bencana Banjir & Cuaca Ekstrim.": "Total incidents monitored in the field: 12 flood & extreme weather disasters.",
+  "Total Pengungsi Terdata & Dievakuasi: 2,450 Jiwa terbagi di 5 Posko Utama.": "Total recorded and evacuated refugees: 2,450 people distributed across 5 main posts.",
+  "Tradisi Lisan": "Oral Tradition",
+  "Tradisi Lisan / Kearifan Lokal": "Oral Tradition / Local Wisdom",
+  "Tradisi lisan mitigasi gempa & tsunami suku Kaili, Sulawesi Tengah. Warisan peringatan dini turun-temurun.": "Oral earthquake & tsunami mitigation tradition of the Kaili people, Central Sulawesi. A hereditary early warning heritage.",
+  "Unggah Foto Bukti Kejadian / Lapangan": "Upload Photo Evidence of Incident / Field",
+  "Verifikasi jalur evakuasi alternatif darurat di Desa Pamanukan.": "Alternative emergency evacuation route verified in Desa Pamanukan.",
+  "penanda bahaya": "hazard marker",
+  "saat gempa pertama terasa.": "when the first earthquake is felt.",
+  "selamat karena langsung berlari ke bukit": "saved because they immediately ran to the hill",
+  "tindakan evakuasi": "evacuation actions",
+  "• Riwayat: 45 Bencana": "• History: 45 Disasters",
 
   // Toasts
   "Koneksi internet terhubung kembali!": "Internet connection re-established!",
@@ -2173,64 +2283,124 @@ const translationDictionary = {
   "Arsip": "Archives",
   "Operasi": "Operations",
   "AI Engine": "AI Engine",
-  "Warisan": "Heritage"
+  "Warisan": "Heritage",
+  "Ane tana nggoro, pai mombetana ri bulu.": "Ane tana nggoro, pai mombetana ri bulu.",
+  "Arsip fisik berkode ANRI-KB/1996/JABAR sudah kami digitalisasikan dan diunggah. Silakan diperiksa, statusnya sudah kami set Publik agar BPBD langsung bisa memakai.": "Physical archive coded ANRI-KB/1996/JABAR has been digitized and uploaded. Please check it; its status is set to Public so BPBD can use it immediately.",
+  "Jika tanah berguncang, segeralah pergi ke perbukitan.": "If the ground shakes, move to the hills immediately.",
+  "Mohon verifikasi arsip dari ANRI mengenai curah hujan historis Karawang 1996. Kami perlukan ini untuk mencocokkan indeks limpasan waduk Jatiluhur.": "Please verify ANRI's historical rainfall archive for Karawang 1996. We need this to match the Jatiluhur reservoir runoff index.",
+  ". Wilayah berkerentanan tinggi diformat merah transparan. Data diperbarui real-time.": "High vulnerability areas are rendered in transparent red. Data is updated in real time.",
+  "1 Entri Tersedia": "1 Entry Available",
+  "1 jam lalu • Oleh ANRI/Arsiparis": "1 hour ago • By ANRI/Archivist",
+  "1.2 Menit (Sangat Cepat)": "1.2 Minutes (Very Fast)",
+  "11:05 • BPBD Subang": "11:05 • BPBD Subang",
+  "14:10 • TNI AD": "14:10 • TNI AD",
+  "15:42 • BPBD Karawang": "15:42 • BPBD Karawang",
+  "2 Data": "2 Data",
+  "3 Laporan Lapangan": "3 Field Reports",
+  "3 jam lalu • Oleh Relawan Subang": "3 hours ago • By Subang Volunteer",
+  "4 SOP Tersimpan": "4 SOP Saved",
+  "88.5% (Tinggi)": "88.5% (High)",
+  "91.2% (Handal)": "91.2% (Reliable)",
+  "ANRI:": "ANRI:",
+  "Admin:": "Admin:",
+  "Aktif & Hidup": "Active & Live",
+  "Anomaly & Multidekade Trend Correlation": "Anomaly & Multidecade Trend Correlation",
+  "Banjir Siklus 1996 & 2007": "1996 & 2007 Flood Cycle",
+  "Bpk. Wirya (Tokoh Masyarakat Pamanukan)": "Mr. Wirya (Community Leader of Pamanukan)",
+  "Build v1.0.4-MVP • PWA Cache: Enabled": "Build v1.0.4-MVP • PWA Cache: Enabled",
+  "Cari kata kunci...": "Search keywords...",
+  "Contoh: Dulu waktu tahun 96 banjir itu datangnya jam 3 pagi, mulainya dengan air parit yang keruh. Waktu itu kami memakai tanda bunyi tiang listrik 3 kali pukulan keras. Jalur lari paling aman itu mengarah ke mushola utara karena tanahnya tinggi, jangan sekali-kali lewat pematang barat karena tanahnya langsung longsor...": "Example: Back in 1996, the flood arrived at 3 a.m., starting with dirty canal water. At that time we used the signal of three hard strikes on the power pole. The safest escape route led to the northern mosque because the ground was higher; never take the western embankment because it collapses immediately...",
+  "Contoh: Laporan Banjir Citarum 1996": "Example: Citarum Flood Report 1996",
+  "Distribusi selimut selesai, evakuasi bot karet dikerahkan di sektor timur...": "Blanket distribution is complete, rubber boat evacuation deployed to the eastern sector...",
+  "EN": "EN",
+  "ID": "ID",
+  "Indeks Kerentanan:": "Vulnerability Index:",
+  "Kab. Karawang": "Karawang Regency",
+  "Log Operasi Lapangan Aktif": "Field Operations Log Active",
+  "NIP. 19780512 200501 1 002": "NIP. 19780512 200501 1 002",
+  "Netral": "Neutral",
+  "PDF/Excel Ready": "PDF/Excel Ready",
+  "RT 03/RW 04 Pamanukan Hilir": "RT 03/RW 04 Pamanukan Hilir",
+  "Role: BNPB / BPBD": "Role: BNPB / BPBD",
+  "SEDAF": "SEDAF",
+  "SEDAF - Strategic Eco-Defense Archives Framework": "SEDAF - Strategic Eco-Defense Archives Framework",
+  "SEDAF logo": "SEDAF logo",
+  "SVG Layer": "SVG Layer",
+  "Solusi berkelanjutan untuk manajemen risiko bencana di Indonesia melalui integrasi arsip ekologi historis, data operasi lapangan, dan platform integrasi data.": "A sustainable solution for disaster risk management in Indonesia through the integration of historical ecological archives, field operation data, and a data integration platform.",
+  "Strategic Eco-Defense Archives Framework": "Strategic Eco-Defense Archives Framework",
+  "Sulawesi": "Sulawesi",
+  "Sumatra": "Sumatra",
+  "Ubah Bahasa / Switch Language": "Change Language / Switch Language",
+  "Ubah Tema Terang/Gelap": "Change Light/Dark Theme",
+  "Uraikan laporan bencana, catatan evakuasi, instansi terdampak...": "Summarize disaster reports, evacuation notes, affected institutions...",
+  "[ANRI] Dra. Retno Wulandari": "[ANRI] Dra. Retno Wulandari",
+  "[BNPB] Letkol. Budi Susilo": "[BNPB] Letkol. Budi Susilo",
+  "haryanto@bpbd.go.id": "haryanto@bpbd.go.id",
+  "tailwind.config = { theme: { extend: { colors: { deepNavy: '#0A0F1D', cardNavy: '#141C33', borderNavy: '#1E294B', secGray: '#94A3B8', accentBlue: '#3A86FF', accentGreen: '#06D6A0', accentAmber: '#FFD166', accentRed: '#EF476F', } } } }": "tailwind.config = { theme: { extend: { colors: { deepNavy: '#0A0F1D', cardNavy: '#141C33', borderNavy: '#1E294B', secGray: '#94A3B8', accentBlue: '#3A86FF', accentGreen: '#06D6A0', accentAmber: '#FFD166', accentRed: '#EF476F', } } } }",
+  "© 2026 SEDAF (Strategic Eco-Defense Archives Framework). All Rights Reserved.": "© 2026 SEDAF (Strategic Eco-Defense Archives Framework). All Rights Reserved.",
+  "•": "•"
 };
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function replaceMappedText(text, mapping) {
+  const keys = Object.keys(mapping).sort((a, b) => b.length - a.length);
+  let result = text;
+  keys.forEach(key => {
+    if (!key || !result.includes(key)) return;
+    result = result.split(key).join(mapping[key]);
+  });
+  return result;
+}
 
 function applyTranslation() {
   const lang = currentLanguage;
   const translations = translationDictionary;
-  
+  const reverseTranslations = Object.fromEntries(
+    Object.entries(translations).map(([key, value]) => [value, key])
+  );
+  const mapping = lang === 'en' ? translations : reverseTranslations;
+
   const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
   let node;
   while (node = walk.nextNode()) {
     const trimmed = node.nodeValue.trim();
     if (!trimmed) continue;
-    
-    // Check if the node is child of script, style or other non-translatable tags
-    const parentTag = node.parentElement ? node.parentElement.tagName.toLowerCase() : '';
-    if (parentTag === 'script' || parentTag === 'style') continue;
 
-    if (lang === 'en') {
-      if (translations[trimmed]) {
-        const prefix = node.nodeValue.match(/^\s*/)[0];
-        const suffix = node.nodeValue.match(/\s*$/)[0];
-        node.nodeValue = prefix + translations[trimmed] + suffix;
-      }
-    } else {
-      const originalKey = Object.keys(translations).find(key => translations[key] === trimmed);
-      if (originalKey) {
-        const prefix = node.nodeValue.match(/^\s*/)[0];
-        const suffix = node.nodeValue.match(/\s*$/)[0];
-        node.nodeValue = prefix + originalKey + suffix;
-      }
+    const parentTag = node.parentElement ? node.parentElement.tagName.toLowerCase() : '';
+    if (['script', 'style', 'noscript', 'template'].includes(parentTag)) continue;
+
+    const translatedText = replaceMappedText(node.nodeValue, mapping);
+    if (translatedText !== node.nodeValue) {
+      node.nodeValue = translatedText;
     }
   }
-  
-  // Inputs/textareas
-  document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
-    const ph = el.getAttribute('placeholder').trim();
-    if (lang === 'en') {
-      if (translations[ph]) {
-        el.setAttribute('placeholder', translations[ph]);
-      }
-    } else {
-      const originalKey = Object.keys(translations).find(key => translations[key] === ph);
-      if (originalKey) {
-        el.setAttribute('placeholder', originalKey);
-      }
+
+  const translateAttribute = (element, attrName) => {
+    const attrValue = element.getAttribute(attrName);
+    if (!attrValue) return;
+    const translated = replaceMappedText(attrValue, mapping);
+    if (translated !== attrValue) {
+      element.setAttribute(attrName, translated);
     }
+  };
+
+  document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
+    translateAttribute(el, 'placeholder');
   });
 
-  // Select dropdowns
+  document.querySelectorAll('[title], [aria-label], [alt]').forEach(el => {
+    translateAttribute(el, 'title');
+    translateAttribute(el, 'aria-label');
+    translateAttribute(el, 'alt');
+  });
+
   document.querySelectorAll('select').forEach(select => {
     Array.from(select.options).forEach(opt => {
-      const txt = opt.text.trim();
-      if (lang === 'en') {
-        if (translations[txt]) opt.text = translations[txt];
-      } else {
-        const originalKey = Object.keys(translations).find(key => translations[key] === txt);
-        if (originalKey) opt.text = originalKey;
-      }
+      const translated = replaceMappedText(opt.text, mapping);
+      if (translated !== opt.text) opt.text = translated;
     });
   });
 }
