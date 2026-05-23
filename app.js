@@ -473,6 +473,200 @@ function updateEvacuationRoutesAndMap(regionName) {
   }
 }
 
+const GEMINI_API_KEY = 'AIzaSyBcGuvkpA2NCk8ULY44nta8xK7JSPh6dEo';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+
+function requestLocationAndUpdateEvacuation() {
+  if (!navigator.geolocation) {
+    showToast('Browser tidak mendukung akses lokasi.', 'danger');
+    return;
+  }
+
+  const statusText = document.getElementById('splash-status-text');
+  if (statusText) {
+    statusText.innerHTML = '<span class="h-2.5 w-2.5 rounded-full bg-accentGreen animate-pulse"></span> Meminta izin lokasi...';
+  }
+
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const userCoords = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+
+    showToast('Lokasi diterima. Mencari titik evakuasi terdekat...', 'success');
+    const nearestHaven = updateEvacuationRoutesWithUserLocation(userCoords);
+    await generateEvacuationAdvice(userCoords, nearestHaven);
+  }, (error) => {
+    console.warn('Geolocation error:', error);
+    showToast('Akses lokasi ditolak atau gagal. Menampilkan rute default.', 'warning');
+    renderLocationFallback();
+  }, {
+    enableHighAccuracy: true,
+    timeout: 12000,
+    maximumAge: 60000
+  });
+}
+
+function renderLocationFallback() {
+  updateEvacuationRoutesAndMap('Jawa');
+  const adviceBox = document.getElementById('evacuation-advice');
+  if (adviceBox) {
+    adviceBox.innerHTML = '<p class="text-slate-300 text-xs">Akses lokasi tidak tersedia. Silakan gunakan tombol "Gunakan Lokasi Saya" jika Anda ingin mencoba lagi.</p>';
+  }
+}
+
+function getAllSafeHavens() {
+  const safeHavens = {
+    'Sumatra': [
+      { name: 'Kantor Bupati Musi Banyuasin', dist: '2.8 km', time: '8 mnt', cap: '600 Jiwa', status: 'Cukup Aman', lat: -3.3150, lng: 103.9180, region: 'Sumatra' },
+      { name: 'Stadion Sekayu', dist: '4.2 km', time: '12 mnt', cap: '1500 Jiwa', status: 'Siaga', lat: -3.3250, lng: 103.9050, region: 'Sumatra' }
+    ],
+    'Jawa': [
+      { name: 'GOR Pamanukan (Safe Haven)', dist: '1.2 km', time: '4 mnt', cap: '850 Jiwa', status: 'Cukup Aman', lat: -6.2710, lng: 107.8120, region: 'Jawa' },
+      { name: 'Masjid Agung Subang', dist: '3.5 km', time: '10 mnt', cap: '1200 Jiwa', status: 'Siaga', lat: -6.2850, lng: 107.8010, region: 'Jawa' },
+      { name: 'Lapangan Sepakbola Pamanukan', dist: '2.1 km', time: '7 mnt', cap: '500 Jiwa', status: 'Penuh', lat: -6.2620, lng: 107.8250, region: 'Jawa' }
+    ],
+    'Kalimantan': [
+      { name: 'Posko Induk Bencana Kapuas', dist: '1.5 km', time: '5 mnt', cap: '400 Jiwa', status: 'Cukup Aman', lat: -1.4800, lng: 114.3150, region: 'Kalimantan' }
+    ],
+    'Sulawesi': [
+      { name: 'Huntap Tondo (Palu)', dist: '5.1 km', time: '15 mnt', cap: '2000 Jiwa', status: 'Siaga', lat: -1.4250, lng: 120.0350, region: 'Sulawesi' }
+    ],
+    'Nusa Tenggara & Bali': [
+      { name: 'Lapangan Puputan Badung', dist: '3.0 km', time: '9 mnt', cap: '1000 Jiwa', status: 'Cukup Aman', lat: -8.6520, lng: 115.2180, region: 'Nusa Tenggara & Bali' }
+    ],
+    'Maluku': [
+      { name: 'Posko Pengungsi SBB', dist: '2.0 km', time: '6 mnt', cap: '300 Jiwa', status: 'Cukup Aman', lat: -3.1300, lng: 129.1350, region: 'Maluku' }
+    ],
+    'Papua': [
+      { name: 'Stadion Lukas Enembe', dist: '6.4 km', time: '18 mnt', cap: '3000 Jiwa', status: 'Siaga', lat: -2.5850, lng: 140.5180, region: 'Papua' }
+    ]
+  };
+
+  return Object.values(safeHavens).flat();
+}
+
+function calculateDistanceKm(lat1, lng1, lat2, lng2) {
+  const toRad = value => value * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const R = 6371;
+  return R * c;
+}
+
+function updateEvacuationRoutesWithUserLocation(userCoords) {
+  const allHavens = getAllSafeHavens();
+  const sorted = allHavens.map(h => ({
+    ...h,
+    actualDistance: calculateDistanceKm(userCoords.lat, userCoords.lng, h.lat, h.lng)
+  })).sort((a, b) => a.actualDistance - b.actualDistance);
+
+  const nearestHaven = sorted[0];
+
+  const badge = document.getElementById('gis-coords-badge');
+  if (badge) {
+    badge.innerText = `${userCoords.lat.toFixed(4)}, ${userCoords.lng.toFixed(4)}`;
+  }
+
+  const iframe = document.getElementById('google-maps-iframe');
+  if (iframe) {
+    iframe.src = `https://maps.google.com/maps?q=${userCoords.lat},${userCoords.lng}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+  }
+
+  const container = document.getElementById('evacuation-routes-list');
+  if (container) {
+    container.innerHTML = '';
+    sorted.slice(0, 5).forEach(h => {
+      const card = document.createElement('div');
+      let capClass = 'text-accentGreen';
+      if (h.status === 'Siaga') capClass = 'text-accentAmber';
+      if (h.status === 'Penuh') capClass = 'text-accentRed';
+
+      card.className = 'glass-card p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 text-xs';
+      card.innerHTML = `
+        <div class="space-y-1">
+          <h4 class="font-bold text-slate-100">${h.name}</h4>
+          <div class="flex flex-wrap gap-2 text-[10px] text-secGray font-medium">
+            <span><i data-lucide="navigation" class="w-3 h-3 inline mr-1 text-accentBlue"></i>${h.actualDistance.toFixed(1)} km</span>
+            <span><i data-lucide="clock" class="w-3 h-3 inline mr-1 text-accentGreen"></i>${h.time}</span>
+            <span><i data-lucide="users" class="w-3 h-3 inline mr-1 text-accentGreen"></i>${h.cap}</span>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-1.5 shrink-0">
+          <span class="text-[8px] font-bold px-1.5 py-0.5 rounded border border-white/10 ${capClass}">${h.status.toUpperCase()}</span>
+          <a href="https://www.google.com/maps/dir/?api=1&origin=${userCoords.lat},${userCoords.lng}&destination=${h.lat},${h.lng}&travelmode=driving" target="_blank" class="bg-accentBlue/20 hover:bg-accentBlue hover:text-white text-accentBlue font-bold px-2 py-1 rounded text-[9px] transition-all flex items-center gap-0.5">
+            <i data-lucide="milestone" class="w-3 h-3"></i> Navigasi
+          </a>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  const title = document.getElementById('evacuation-card-title');
+  if (title) {
+    title.innerText = 'Titik Evakuasi Terdekat (Berbasis Lokasi Anda)';
+  }
+
+  const adviceBox = document.getElementById('evacuation-advice');
+  if (adviceBox) {
+    adviceBox.innerHTML = '<p class="text-slate-300 text-xs">Menentukan tujuan evakuasi terdekat...</p>';
+  }
+
+  return nearestHaven;
+}
+
+async function generateEvacuationAdvice(userCoords, nearestHaven) {
+  const adviceBox = document.getElementById('evacuation-advice');
+  if (!adviceBox) return;
+
+  const promptText = `Saya berada di koordinat ${userCoords.lat.toFixed(5)},${userCoords.lng.toFixed(5)} di Indonesia. Titik evakuasi terdekat adalah ${nearestHaven.name} (${nearestHaven.region}). Berikan arahan ringkas dan aman untuk menuju ke sana, termasuk mode transportasi terbaik, potensi hambatan, dan langkah kesiapsiagaan darurat.`;
+
+  adviceBox.innerHTML = '<p class="text-slate-300 text-xs">Meminta arahan evakuasi dari AI...</p>';
+
+  try {
+    const response = await fetch(GEMINI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-goog-api-key': GEMINI_API_KEY
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: promptText
+              }
+            ]
+          }
+        ]
+      })
+    });
+
+    const result = await response.json();
+    let aiText = '';
+
+    if (Array.isArray(result?.candidates) && result.candidates.length) {
+      aiText = result.candidates[0].content.map(item => item.text || '').join(' ');
+    } else if (Array.isArray(result?.output) && result.output.length && Array.isArray(result.output[0]?.content)) {
+      aiText = result.output[0].content.map(item => item.text || '').join(' ');
+    }
+
+    if (!aiText) {
+      aiText = 'AI tidak dapat menghasilkan saran evakuasi saat ini. Silakan coba lagi nanti.';
+    }
+
+    adviceBox.innerHTML = `<p class="text-slate-300 text-xs">${aiText}</p>`;
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    adviceBox.innerHTML = '<p class="text-slate-300 text-xs">Gagal memuat arahan evakuasi AI. Silakan periksa koneksi atau coba lagi.</p>';
+  }
+}
+
 function toggleGisLayer(layerName) {
   const layers = ['banjir', 'gempa', 'tsunami', 'longsor'];
   layers.forEach(lay => {
@@ -1564,8 +1758,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setGlobalLanguage('en', true);
   }
 
-  // Hide splash screen once initialization is complete
-  hideSplashScreen();
+  // Hide splash screen after singkat loading dan minta lokasi pengguna
+  setTimeout(() => {
+    hideSplashScreen();
+    requestLocationAndUpdateEvacuation();
+  }, 2400);
 
   // Register PWA Service Worker
   if ('serviceWorker' in navigator) {
@@ -1592,8 +1789,6 @@ function hideSplashScreen() {
     }
   }, 350);
 }
-
-window.addEventListener('load', hideSplashScreen);
 
 // Toggle notifications box
 function toggleNotificationPanel() {

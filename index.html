@@ -52,9 +52,9 @@
       <p class="mt-2 text-sm text-slate-400">Strategic Eco-Defense Archives Framework</p>
       <div class="mt-5 inline-flex flex-col gap-3 text-xs uppercase tracking-[0.25em] text-slate-400">
         <span class="font-semibold">Memuat aplikasi...</span>
-        <span class="inline-flex items-center justify-center gap-2 text-[11px] text-slate-500">
+        <span id="splash-status-text" class="inline-flex items-center justify-center gap-2 text-[11px] text-slate-500">
           <span class="h-2.5 w-2.5 rounded-full bg-accentGreen animate-pulse"></span>
-          <span>Mohon tunggu sebentar</span>
+          <span>Meminta izin lokasi dan menyiapkan rute evakuasi.</span>
         </span>
       </div>
     </div>
@@ -542,17 +542,20 @@
 
             <!-- Nearest Evacuation Routes Card -->
             <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
-              <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-borderNavy pb-2.5">
                 <div class="flex items-center gap-2">
                   <i data-lucide="route" class="w-5 h-5 text-accentGreen"></i>
-                  <h3 class="font-bold text-base text-white">Titik Evakuasi Terdekat (Safe Havens)</h3>
+                  <h3 id="evacuation-card-title" class="font-bold text-base text-white">Titik Evakuasi Terdekat (Safe Havens)</h3>
                 </div>
-                <span class="text-xs text-secGray">Arah Rute Taktis</span>
+                <button onclick="requestLocationAndUpdateEvacuation()" id="locate-user-btn" class="bg-accentBlue text-white text-[10px] font-bold py-2 px-3 rounded-xl hover:bg-blue-600 transition-all">Gunakan Lokasi Saya</button>
               </div>
               
               <!-- Evacuation Routes List -->
               <div class="space-y-3 max-h-72 overflow-y-auto pr-1" id="evacuation-routes-list">
                 <!-- Injected dynamically by app.js based on selected region -->
+              </div>
+              <div id="evacuation-advice" class="mt-4 rounded-2xl border border-borderNavy bg-deepNavy/80 p-4 text-xs text-slate-300 min-h-[5rem]">
+                Arahan evakuasi akan muncul di sini setelah akses lokasi diberikan.
               </div>
             </div>
 
