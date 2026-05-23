@@ -40,7 +40,18 @@ body {
 }
 
 #splash-screen {
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  opacity: 1;
+  visibility: visible;
+}
+
+.loader {
+  border-top-color: #3A86FF;
+  animation: spinner 1.2s linear infinite;
+}
+
+body.loading-active {
+  overflow: hidden;
 }
 
 /* Glassmorphism Styles */

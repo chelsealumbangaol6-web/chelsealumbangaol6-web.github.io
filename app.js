@@ -1583,6 +1583,7 @@ function hideSplashScreen() {
   const splash = document.getElementById('splash-screen');
   if (!splash) return;
   splash.classList.add('opacity-0');
+  document.body.classList.remove('loading-active');
   setTimeout(() => {
     splash.style.visibility = 'hidden';
     splash.style.pointerEvents = 'none';

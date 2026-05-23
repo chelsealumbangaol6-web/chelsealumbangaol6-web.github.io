@@ -39,7 +39,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-deepNavy text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row transition-colors duration-300">
+<body class="loading-active bg-deepNavy text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row transition-colors duration-300">
 
   <!-- ==================== SPLASH / LOADING SCREEN ==================== -->
   <div id="splash-screen" class="fixed inset-0 z-[999] flex items-center justify-center bg-deepNavy text-white">
@@ -47,11 +47,15 @@
       <div class="mx-auto mb-4 w-20 h-20 rounded-3xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center shadow-xl shadow-cyan-500/20">
         <img src="icons/SEDAF.png" alt="SEDAF logo" class="w-16 h-16 object-contain" />
       </div>
+      <div class="mx-auto mb-4 h-12 w-12 rounded-full border-4 border-white/10 border-t-white loader"></div>
       <div class="font-extrabold text-3xl tracking-tight">SEDAF</div>
       <p class="mt-2 text-sm text-slate-400">Strategic Eco-Defense Archives Framework</p>
-      <div class="mt-6 inline-flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-slate-400">
-        <span class="h-2.5 w-2.5 rounded-full bg-accentGreen animate-pulse"></span>
-        <span>Memuat aplikasi...</span>
+      <div class="mt-5 inline-flex flex-col gap-3 text-xs uppercase tracking-[0.25em] text-slate-400">
+        <span class="font-semibold">Memuat aplikasi...</span>
+        <span class="inline-flex items-center justify-center gap-2 text-[11px] text-slate-500">
+          <span class="h-2.5 w-2.5 rounded-full bg-accentGreen animate-pulse"></span>
+          <span>Mohon tunggu sebentar</span>
+        </span>
       </div>
     </div>
   </div>
