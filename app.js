@@ -1941,8 +1941,15 @@ const translationDictionary = {
   "Zona Hotspot Mikro": "Micro Hotspot Zone",
   "Google Maps Live Viewport": "Google Maps Live Viewport",
   "Titik Evakuasi Terdekat (Safe Havens)": "Nearest Evacuation Points (Safe Havens)",
+  "Titik Evakuasi Terdekat (Berbasis Lokasi Anda)": "Nearest Evacuation Points (Based on Your Location)",
   "Arah Rute Taktis": "Tactical Route Directions",
   "Navigasi": "Navigate",
+  "Gunakan Lokasi Saya": "Use My Location",
+  "Menentukan tujuan evakuasi terdekat...": "Determining the nearest evacuation destination...",
+  "Meminta arahan evakuasi dari AI...": "Requesting evacuation guidance from AI...",
+  "Akses lokasi tidak tersedia. Silakan gunakan tombol \"Gunakan Lokasi Saya\" jika Anda ingin mencoba lagi.": "Location access is unavailable. Please use the \"Use My Location\" button if you want to try again.",
+  "Meminta izin lokasi...": "Requesting location permission...",
+  "Meminta izin lokasi dan menyiapkan rute evakuasi.": "Requesting location permission and preparing evacuation route...",
   
   // Archives View
   "Unggah Arsip Bencana": "Upload Disaster Archive",
@@ -2179,7 +2186,7 @@ function applyTranslation() {
     
     // Check if the node is child of script, style or other non-translatable tags
     const parentTag = node.parentElement ? node.parentElement.tagName.toLowerCase() : '';
-    if (parentTag === 'script' || parentTag === 'style' || parentTag === 'option' && node.parentElement.id !== 'role-selector') continue;
+    if (parentTag === 'script' || parentTag === 'style') continue;
 
     if (lang === 'en') {
       if (translations[trimmed]) {
@@ -2213,9 +2220,8 @@ function applyTranslation() {
   });
 
   // Select dropdowns
-  const roleSelect = document.getElementById('role-selector');
-  if (roleSelect) {
-    Array.from(roleSelect.options).forEach(opt => {
+  document.querySelectorAll('select').forEach(select => {
+    Array.from(select.options).forEach(opt => {
       const txt = opt.text.trim();
       if (lang === 'en') {
         if (translations[txt]) opt.text = translations[txt];
@@ -2224,7 +2230,7 @@ function applyTranslation() {
         if (originalKey) opt.text = originalKey;
       }
     });
-  }
+  });
 }
 
 function setGlobalLanguage(lang, isStartup = false) {
