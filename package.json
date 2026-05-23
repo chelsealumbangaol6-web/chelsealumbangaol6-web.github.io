@@ -1,0 +1,18 @@
+{
+  "name": "sedaf-pwa",
+  "version": "1.0.0",
+  "description": "Strategic Eco-Defense Archives Framework",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite --port 3000 --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tunnel": "node tunnel.js"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@ngrok/ngrok": "^1.7.0"
+  }
+}

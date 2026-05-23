@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEDAF - Strategic Eco-Defense Archives Framework</title>
+  <meta name="description" content="Platform intelijen adaptasi bencana dan perubahan iklim berbasis arsip historis, data lapangan, GIS, dan AI.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/SEDAF.png">
+  <link rel="apple-touch-icon" href="icons/SEDAF.png">
+  <meta name="theme-color" content="#1C2541">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deepNavy: '#0A0F1D',
+            cardNavy: '#141C33',
+            borderNavy: '#1E294B',
+            secGray: '#94A3B8',
+            accentBlue: '#3A86FF',
+            accentGreen: '#06D6A0',
+            accentAmber: '#FFD166',
+            accentRed: '#EF476F',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Google Fonts & Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Lucide Icons & Chart.js -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-deepNavy text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row transition-colors duration-300">
+
+  <!-- ==================== SPLASH / LOADING SCREEN ==================== -->
+  <div id="splash-screen" class="fixed inset-0 z-[999] flex items-center justify-center bg-deepNavy text-white">
+    <div class="text-center px-6 py-8 rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-cyan-500/20 max-w-sm w-full">
+      <div class="mx-auto mb-4 w-20 h-20 rounded-3xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center shadow-xl shadow-cyan-500/20">
+        <img src="icons/SEDAF.png" alt="SEDAF logo" class="w-16 h-16 object-contain" />
+      </div>
+      <div class="font-extrabold text-3xl tracking-tight">SEDAF</div>
+      <p class="mt-2 text-sm text-slate-400">Strategic Eco-Defense Archives Framework</p>
+      <div class="mt-6 inline-flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-slate-400">
+        <span class="h-2.5 w-2.5 rounded-full bg-accentGreen animate-pulse"></span>
+        <span>Memuat aplikasi...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SIDEBAR OVERLAY FOR MOBILE ==================== -->
+  <div id="sidebar-overlay" onclick="closeSidebarDrawer()" class="hidden fixed inset-0 bg-black/60 z-30 transition-opacity backdrop-blur-sm md:hidden"></div>
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside id="sidebar" class="w-72 fixed inset-y-0 left-0 -translate-x-full md:translate-x-0 md:relative md:w-64 bg-cardNavy border-r border-borderNavy flex flex-col justify-between shrink-0 transition-all duration-300 z-40">
+    <div>
+      <!-- Header / Logo -->
+      <div class="p-5 flex items-center justify-between border-b border-borderNavy">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-900/80 border border-white/5 overflow-hidden flex items-center justify-center shadow-lg shadow-slate-900/30">
+            <img src="icons/SEDAF.png" alt="SEDAF logo" class="w-9 h-9 object-contain" />
+          </div>
+          <div>
+            <h1 class="font-extrabold text-xl tracking-tight text-white font-outfit">SEDAF</h1>
+          </div>
+        </div>
+        <button id="close-sidebar" class="md:hidden text-secGray hover:text-white">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-160px)]">
+        <a href="#" onclick="switchView('dashboard')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all active" id="nav-dashboard">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Dashboard Utama</span>
+        </a>
+        <a href="#" onclick="switchView('gis')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-gis">
+          <i data-lucide="map" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Peta Risiko (GIS)</span>
+        </a>
+        <a href="#" onclick="switchView('archives')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-archives">
+          <i data-lucide="archive" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Arsip Bencana</span>
+        </a>
+        <a href="#" onclick="switchView('operations')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-operations">
+          <i data-lucide="activity" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Data Operasi</span>
+        </a>
+        <a href="#" onclick="switchView('ai-engine')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-ai-engine">
+          <i data-lucide="brain" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Analitik AI</span>
+        </a>
+        <a href="#" onclick="switchView('knowledge')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-knowledge">
+          <i data-lucide="book-open" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">SOP & Knowledge</span>
+        </a>
+        <a href="#" onclick="switchView('collaboration')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-collaboration">
+          <i data-lucide="users" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Kolaborasi Instansi</span>
+        </a>
+        <a href="#" onclick="switchView('reports')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-reports">
+          <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Laporan & Monitoring</span>
+        </a>
+        <a href="#" onclick="switchView('admin-panel')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-admin-panel">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Panel Admin</span>
+        </a>
+        <a href="#" onclick="switchView('profile')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-profile">
+          <i data-lucide="user" class="w-5 h-5"></i>
+          <span class="font-medium text-sm">Profil Pengguna</span>
+        </a>
+        <div class="my-1 border-t border-borderNavy/50"></div>
+        <a href="#" onclick="switchView('ensiklopedia')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-secGray hover:text-white hover:bg-borderNavy/50 transition-all" id="nav-ensiklopedia">
+          <i data-lucide="landmark" class="w-5 h-5 text-accentAmber"></i>
+          <span class="font-medium text-sm">Ensiklopedia Budaya</span>
+        </a>
+      </nav>
+    </div>
+
+  </aside>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 flex flex-col min-w-0">
+
+    <!-- TOP HEADER -->
+    <header class="h-16 bg-cardNavy/80 border-b border-borderNavy backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20 shrink-0">
+      
+      <!-- Mobile Sidebar Toggle -->
+      <div class="flex items-center gap-3 md:hidden">
+        <button id="open-sidebar" class="text-secGray hover:text-white focus:outline-none">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="font-extrabold text-xl tracking-tight text-white font-outfit">SEDAF</span>
+      </div>
+
+      <!-- Warning Alert Ticker -->
+      <div class="hidden lg:flex items-center gap-3 bg-accentRed/10 border border-accentRed/20 px-4 py-1.5 rounded-full text-xs font-medium max-w-lg overflow-hidden select-none">
+        <span class="flex items-center gap-1.5 text-accentRed shrink-0 font-bold uppercase tracking-wider animate-pulse">
+          <span class="w-2 h-2 rounded-full bg-accentRed pulse-red"></span>
+          ALERT AKTIF
+        </span>
+        <div class="text-secGray whitespace-nowrap overflow-hidden text-ellipsis w-80">
+          <span id="alert-ticker-text">Peringatan Dini: Potensi Banjir Pasang (Rob) di Pantura Jawa Barat 18-20 Mei.</span>
+        </div>
+      </div>
+
+      <!-- Role Switcher & Profile Quick Menu -->
+      <div class="flex items-center gap-4 ml-auto">
+        
+        <!-- Global Language Toggle -->
+        <button onclick="toggleGlobalLanguage()" class="text-secGray hover:text-white transition-all focus:outline-none p-1.5 rounded-lg hover:bg-borderNavy/50 flex items-center gap-1 font-bold text-xs" id="global-lang-btn" title="Ubah Bahasa / Switch Language">
+          <i data-lucide="languages" class="w-4 h-4"></i>
+          <span id="global-lang-label">EN</span>
+        </button>
+
+        <!-- Theme Toggle Switcher -->
+        <button onclick="toggleTheme()" class="text-secGray hover:text-white transition-all focus:outline-none p-1.5 rounded-lg hover:bg-borderNavy/50" title="Ubah Tema Terang/Gelap">
+          <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Quick Role Switcher -->
+        <div class="flex items-center gap-2">
+          <span class="hidden sm:inline text-xs text-secGray font-medium">Otorisasi:</span>
+          <select id="role-selector" onchange="changeUserRole(this.value)" class="bg-borderNavy border border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-200 font-semibold focus:outline-none focus:border-accentBlue cursor-pointer">
+            <option value="Admin">Nasional Admin</option>
+            <option value="BPBD" selected>BNPB / BPBD</option>
+            <option value="BMKG">BMKG (Sensor)</option>
+            <option value="ANRI">ANRI (Arsiparis)</option>
+            <option value="TNI_Polri">TNI / Polri</option>
+            <option value="Relawan">Relawan Sipil</option>
+            <option value="Publik">Masyarakat Umum</option>
+          </select>
+        </div>
+
+        <!-- Notification Trigger -->
+        <div class="relative cursor-pointer text-secGray hover:text-white transition-colors p-1" onclick="toggleNotificationPanel()">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute -top-1 -right-1 bg-accentRed text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- NOTIFICATION BOX (TOGGLEABLE) -->
+    <div id="notification-box" class="hidden absolute right-6 top-16 w-80 bg-cardNavy border border-borderNavy rounded-2xl shadow-2xl p-4 z-40">
+      <div class="flex items-center justify-between border-b border-borderNavy pb-2 mb-3">
+        <h4 class="font-bold text-sm text-white">Notifikasi Terkini</h4>
+        <span class="text-xs text-accentBlue hover:underline cursor-pointer" onclick="clearNotifications()">Hapus semua</span>
+      </div>
+      <div class="space-y-3 text-xs" id="notification-list">
+        <div class="p-2.5 rounded-lg bg-borderNavy/30 border border-white/5 flex gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-accentRed pulse-red shrink-0 mt-1"></div>
+          <div>
+            <p class="font-semibold text-white">Anomali Suhu Muka Laut BMKG</p>
+            <p class="text-secGray text-[10px] mt-0.5">Baru saja • Integrasi API BMKG</p>
+          </div>
+        </div>
+        <div class="p-2.5 rounded-lg bg-borderNavy/30 border border-white/5 flex gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-accentAmber shrink-0 mt-1"></div>
+          <div>
+            <p class="font-semibold text-slate-200">Revisi SOP Citarum diajukan</p>
+            <p class="text-secGray text-[10px] mt-0.5">1 jam lalu • Oleh ANRI/Arsiparis</p>
+          </div>
+        </div>
+        <div class="p-2.5 rounded-lg bg-borderNavy/30 border border-white/5 flex gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-accentGreen shrink-0 mt-1"></div>
+          <div>
+            <p class="font-semibold text-slate-200">Laporan Lapangan BPBD Subang Masuk</p>
+            <p class="text-secGray text-[10px] mt-0.5">3 jam lalu • Oleh Relawan Subang</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEWPORT CONTAINER ==================== -->
+    <div class="flex-1 overflow-y-auto p-4 md:p-6 pb-24 md:pb-6 space-y-6">
+
+      <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+      <section id="view-dashboard" class="page-view active space-y-6">
+        
+        <!-- Welcome Jumbotron -->
+        <div class="relative bg-gradient-to-r from-cardNavy via-[#1A233D] to-deepNavy rounded-3xl p-6 md:p-8 border border-borderNavy overflow-hidden shadow-2xl">
+          <div class="absolute right-0 top-0 w-96 h-96 bg-accentBlue/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+          
+          <!-- Language Toggle Button -->
+          <div class="absolute top-4 right-4 flex items-center gap-1 bg-deepNavy/60 border border-borderNavy p-1 rounded-xl z-10">
+            <button onclick="setDashboardLanguage('id')" id="lang-btn-id" class="px-2.5 py-1 text-[10px] font-bold rounded-lg transition-all bg-accentBlue text-white">ID</button>
+            <button onclick="setDashboardLanguage('en')" id="lang-btn-en" class="px-2.5 py-1 text-[10px] font-bold rounded-lg transition-all text-secGray hover:text-white">EN</button>
+          </div>
+
+          <div class="max-w-2xl">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-accentBlue/10 text-accentBlue border border-accentBlue/20 mb-3 uppercase tracking-wide">
+              DASHBOARD
+            </span>
+            <h2 class="text-2xl md:text-3xl font-extrabold font-outfit text-white tracking-tight mb-2">
+              <span id="welcome-title">Selamat Datang di SEDAF</span>
+            </h2>
+            <p class="text-sm md:text-base text-secGray leading-relaxed mb-4">
+              <span id="welcome-desc">Solusi berkelanjutan untuk manajemen risiko bencana di Indonesia melalui integrasi arsip ekologi historis, data operasi lapangan, dan platform integrasi data.</span>
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="switchView('gis')" class="bg-accentBlue hover:bg-blue-600 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all flex items-center gap-2">
+                <i data-lucide="map" class="w-4 h-4"></i>
+                <span id="btn-text-gis">Buka Peta Risiko GIS</span>
+              </button>
+              <button onclick="switchView('ai-engine')" class="bg-borderNavy hover:bg-borderNavy/80 text-white text-xs font-semibold py-2.5 px-5 rounded-xl border border-white/5 transition-all flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span id="btn-text-ai">Lihat Rekomendasi AI</span>
+              </button>
+              <button onclick="switchView('ensiklopedia')" class="bg-gradient-to-r from-accentAmber/20 to-accentRed/10 hover:from-accentAmber/30 border border-accentAmber/30 hover:border-accentAmber/50 text-accentAmber text-xs font-bold py-2.5 px-5 rounded-xl transition-all flex items-center gap-2">
+                <i data-lucide="landmark" class="w-4 h-4"></i>
+                <span id="btn-text-heritage">Jelajahi Warisan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Role Control & Mandate Dashboard Panel -->
+        <div id="role-mandate-panel" class="glass-panel p-5 rounded-3xl border border-borderNavy space-y-4 shadow-xl transition-all duration-300">
+          <!-- Will be injected dynamically by app.js -->
+        </div>
+
+        <!-- Stat Card Counters -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between text-secGray">
+              <span class="text-xs font-semibold uppercase tracking-wider">Bencana Aktif</span>
+              <div class="w-8 h-8 rounded-lg bg-accentRed/10 text-accentRed flex items-center justify-center">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-3xl font-extrabold tracking-tight text-white mt-2" id="stat-active-disasters">12</h3>
+              <span class="text-[10px] text-accentRed font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                +4 wilayah baru hari ini
+              </span>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between text-secGray">
+              <span class="text-xs font-semibold uppercase tracking-wider">Arsip Historis</span>
+              <div class="w-8 h-8 rounded-lg bg-accentBlue/10 text-accentBlue flex items-center justify-center">
+                <i data-lucide="book-marked" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-3xl font-extrabold tracking-tight text-white mt-2" id="stat-archives">1,420</h3>
+              <span class="text-[10px] text-accentGreen font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="check" class="w-3 h-3"></i>
+                100% Terindeks ANRI
+              </span>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between text-secGray">
+              <span class="text-xs font-semibold uppercase tracking-wider">Data Operasi</span>
+              <div class="w-8 h-8 rounded-lg bg-accentGreen/10 text-accentGreen flex items-center justify-center">
+                <i data-lucide="navigation-2" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-3xl font-extrabold tracking-tight text-white mt-2" id="stat-operations">48</h3>
+              <span class="text-[10px] text-secGray font-semibold flex items-center gap-1 mt-1">
+                BPBD, TNI, POLRI aktif
+              </span>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between text-secGray">
+              <span class="text-xs font-semibold uppercase tracking-wider">Kualitas Data</span>
+              <div class="w-8 h-8 rounded-lg bg-accentAmber/10 text-accentAmber flex items-center justify-center">
+                <i data-lucide="database" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-3xl font-extrabold tracking-tight text-white mt-2" id="stat-data-quality">94.8%</h3>
+              <span class="text-[10px] text-accentGreen font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="shield-check" class="w-3 h-3"></i>
+                Indeks Kesiapan Tinggi
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive SVG Grid & Live Feed -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Mini SVG Map Box -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-base text-white">Visualisasi Spasial Mini (GIS Sandbox)</h3>
+                <p class="text-xs text-secGray">Peta regional interaktif. Klik wilayah untuk status risiko AI.</p>
+              </div>
+              <span class="text-[10px] font-semibold bg-accentBlue/10 text-accentBlue px-2.5 py-1 rounded-full">SVG Layer</span>
+            </div>
+            
+            <!-- Dynamic Inline SVG Map (Interactive Archipelago Representation) -->
+            <div class="bg-deepNavy/60 rounded-xl p-4 flex items-center justify-center border border-borderNavy relative h-64 overflow-hidden">
+              <svg viewBox="0 0 800 350" class="w-full h-full max-h-60 select-none">
+                <!-- Sumatra -->
+                <path d="M50,80 L80,60 L140,110 L190,180 L160,210 L120,200 L90,160 Z" class="svg-region danger-medium" id="region-sumatra" onclick="selectMapRegion('Sumatra', 0.65, 'Banjir & Karhutla multi-dekade terdeteksi. Naikkan patroli lahan basah.')"></path>
+                <!-- Jawa -->
+                <path d="M160,230 L220,225 L290,235 L340,250 L310,265 L220,250 L160,240 Z" class="svg-region danger-high selected" id="region-jawa" onclick="selectMapRegion('Jawa', 0.89, 'Kerentanan banjir rob pesisir utara ekstrim. Naikkan tanggul di 5 titik kritis.')"></path>
+                <!-- Kalimantan -->
+                <path d="M220,100 L270,80 L320,100 L340,140 L310,180 L250,190 L210,150 Z" class="svg-region danger-low" id="region-kalimantan" onclick="selectMapRegion('Kalimantan', 0.35, 'Indeks ancaman hidrologis rendah. Potensi perluasan wilayah konservasi gambut.')"></path>
+                <!-- Sulawesi -->
+                <path d="M360,110 L380,90 L400,120 L370,160 L390,190 L360,200 L350,150 Z" class="svg-region danger-medium" id="region-sulawesi" onclick="selectMapRegion('Sulawesi', 0.58, 'Kerawanan tanah longsor tinggi pada lereng curam di Sulawesi Tengah.')"></path>
+                <!-- Nusa Tenggara & Bali -->
+                <path d="M350,255 L380,255 L420,260 L460,265 L460,275 L380,270 L350,260 Z" class="svg-region danger-medium" id="region-nusatenggara" onclick="selectMapRegion('Nusa Tenggara & Bali', 0.62, 'Ancaman Tsunami & Gempa vulkanis/tektonis. Perkuat sirine early warning.')"></path>
+                <!-- Maluku -->
+                <path d="M440,120 L480,100 L500,140 L460,180 L430,150 Z" class="svg-region danger-low" id="region-maluku" onclick="selectMapRegion('Maluku', 0.40, 'Kesiapsiagaan logistik bahari perlu ditingkatkan menjelang anomali angin barat.')"></path>
+                <!-- Papua -->
+                <path d="M510,130 L590,110 L640,120 L630,210 L560,200 L520,170 Z" class="svg-region danger-medium" id="region-papua" onclick="selectMapRegion('Papua', 0.52, 'Deteksi pola longsor tinggi di area pertambangan dan dataran tinggi.')"></path>
+                
+                <!-- Map Node Labels -->
+                <text x="75" y="110" fill="#F8F9FA" font-size="12" class="pointer-events-none font-bold" opacity="0.6">Sumatra</text>
+                <text x="210" y="275" fill="#F8F9FA" font-size="12" class="pointer-events-none font-bold" opacity="0.8">Jawa</text>
+                <text x="240" y="130" fill="#F8F9FA" font-size="12" class="pointer-events-none font-bold" opacity="0.6">Kalimantan</text>
+                <text x="390" y="145" fill="#F8F9FA" font-size="12" class="pointer-events-none font-bold" opacity="0.6">Sulawesi</text>
+                <text x="560" y="160" fill="#F8F9FA" font-size="12" class="pointer-events-none font-bold" opacity="0.6">Papua</text>
+              </svg>
+              
+              <!-- Quick Float Indicator -->
+              <div class="absolute bottom-3 right-3 bg-cardNavy/90 border border-borderNavy px-3 py-1.5 rounded-lg text-[10px] space-y-1">
+                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-accentRed"></span> Indeks Ekstrim (&gt;0.80)</div>
+                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-accentAmber"></span> Indeks Sedang (0.50 - 0.79)</div>
+                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-accentGreen"></span> Indeks Rendah (&lt;0.50)</div>
+              </div>
+            </div>
+
+            <!-- Clicked Region Info Details -->
+            <div id="map-region-detail" class="bg-borderNavy/30 border border-borderNavy p-4 rounded-xl space-y-2">
+              <div class="flex items-center justify-between">
+                <h4 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-accentBlue"></i>
+                  Status Wilayah: <span id="map-region-name" class="text-accentBlue">Jawa</span>
+                </h4>
+                <span class="text-xs bg-accentRed/10 text-accentRed border border-accentRed/20 px-2 py-0.5 rounded-md font-semibold">
+                  Indeks Risiko: <span id="map-region-risk">0.89</span>/1.00
+                </span>
+              </div>
+              <p class="text-xs text-secGray" id="map-region-desc">
+                Kerentanan banjir rob pesisir utara ekstrim. Naikkan tanggul di 5 titik kritis.
+              </p>
+            </div>
+          </div>
+
+          <!-- Live Operations & Quality Chart -->
+          <div class="space-y-6">
+            <!-- Data Quality chart -->
+            <div class="glass-panel p-5 rounded-2xl space-y-4">
+              <h3 class="font-bold text-base text-white">Kesiapan & Kualitas Data</h3>
+              <div class="w-full h-44 flex items-center justify-center relative">
+                <canvas id="qualityChart" class="w-full h-full"></canvas>
+              </div>
+              <div class="flex justify-between text-xs text-secGray border-t border-borderNavy pt-2">
+                <span>Kelengkapan: 98%</span>
+                <span>Audit Trail: Terverifikasi</span>
+              </div>
+            </div>
+
+            <!-- Live Operations Feed -->
+            <div class="glass-panel p-5 rounded-2xl space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-base text-white">Log Aktivitas Operasi</h3>
+                <span class="text-[10px] text-accentGreen bg-accentGreen/10 border border-accentGreen/20 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">REAL-TIME</span>
+              </div>
+              <div class="space-y-3 max-h-56 overflow-y-auto pr-1 text-xs" id="dashboard-log-feed">
+                <!-- Initial operation feed items -->
+                <div class="border-l-2 border-accentRed pl-3 py-1 space-y-1">
+                  <div class="flex justify-between items-center text-[10px] text-secGray">
+                    <span>15:42 • BPBD Karawang</span>
+                    <span class="text-accentRed font-semibold uppercase">Darurat</span>
+                  </div>
+                  <p class="text-slate-200">Evakuasi warga terdampak tanggul jebol di Citarum Hilir (Sektor B).</p>
+                </div>
+                <div class="border-l-2 border-accentBlue pl-3 py-1 space-y-1">
+                  <div class="flex justify-between items-center text-[10px] text-secGray">
+                    <span>14:10 • TNI AD</span>
+                    <span class="text-accentBlue font-semibold uppercase">Logistik</span>
+                  </div>
+                  <p class="text-slate-200">Pendirian dapur umum di Gedung Juang Karawang Barat oleh Kodim.</p>
+                </div>
+                <div class="border-l-2 border-accentGreen pl-3 py-1 space-y-1">
+                  <div class="flex justify-between items-center text-[10px] text-secGray">
+                    <span>11:05 • BPBD Subang</span>
+                    <span class="text-accentGreen font-semibold uppercase">Mitigasi</span>
+                  </div>
+                  <p class="text-slate-200">Verifikasi jalur evakuasi alternatif darurat di Desa Pamanukan.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==================== VIEW 2: PETA RISIKO GIS ==================== -->
+      <section id="view-gis" class="page-view space-y-6">
+        <div class="glass-panel p-6 rounded-3xl space-y-6 border border-borderNavy shadow-2xl">
+          
+          <!-- Title & GIS Filters -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-borderNavy pb-4">
+            <div>
+              <h2 class="text-xl font-bold font-outfit text-white">Sistem Geografis Interaktif (GIS)</h2>
+              <p class="text-xs text-secGray">Simulasi data spasial-temporal indeks risiko kebencanaan Indonesia.</p>
+            </div>
+            
+            <!-- Filters Grid -->
+            <div class="flex flex-wrap items-center gap-3">
+              <!-- Spatial Hazard Toggle Layer -->
+              <span class="text-xs font-semibold text-secGray">Layer:</span>
+              <button onclick="toggleGisLayer('banjir')" id="layer-banjir" class="bg-accentRed text-white text-xs font-semibold py-1.5 px-3 rounded-lg border border-accentRed/30 flex items-center gap-1.5 transition-all">
+                <i data-lucide="droplets" class="w-3.5 h-3.5"></i> Banjir
+              </button>
+              <button onclick="toggleGisLayer('gempa')" id="layer-gempa" class="bg-borderNavy text-secGray text-xs font-semibold py-1.5 px-3 rounded-lg border border-white/5 flex items-center gap-1.5 transition-all">
+                <i data-lucide="activity" class="w-3.5 h-3.5"></i> Gempa
+              </button>
+              <button onclick="toggleGisLayer('tsunami')" id="layer-tsunami" class="bg-borderNavy text-secGray text-xs font-semibold py-1.5 px-3 rounded-lg border border-white/5 flex items-center gap-1.5 transition-all">
+                <i data-lucide="waves" class="w-3.5 h-3.5"></i> Tsunami
+              </button>
+              <button onclick="toggleGisLayer('longsor')" id="layer-longsor" class="bg-borderNavy text-secGray text-xs font-semibold py-1.5 px-3 rounded-lg border border-white/5 flex items-center gap-1.5 transition-all">
+                <i data-lucide="mountains" class="w-3.5 h-3.5"></i> Longsor
+              </button>
+            </div>
+          </div>
+
+          <!-- Large Spatial Map Workspace -->
+          <div class="relative bg-deepNavy border border-borderNavy rounded-2xl p-6 h-96 flex items-center justify-center overflow-hidden">
+            <div class="absolute top-4 left-4 bg-cardNavy/95 border border-borderNavy px-4 py-3 rounded-xl z-10 space-y-2 max-w-[240px]">
+              <h4 class="font-bold text-xs text-white">Informasi Layer Aktif</h4>
+              <div class="text-[10px] text-secGray leading-relaxed" id="gis-layer-info">
+                Menampilkan layer <span class="text-accentRed font-semibold">Banjir</span>. Wilayah berkerentanan tinggi diformat merah transparan. Data diperbarui real-time.
+              </div>
+            </div>
+            
+            <!-- High Res Interactive Map SVG -->
+            <svg viewBox="0 0 800 350" class="w-full h-full select-none" id="gis-map-canvas">
+              <path d="M50,80 L80,60 L140,110 L190,180 L160,210 L120,200 L90,160 Z" class="svg-region danger-medium" id="gis-region-sumatra" onclick="selectGisRegion('Sumatra', 35, 12, 'Banjir & Karhutla', 'Kab. Musi Banyuasin, Pesisir Lampung')"></path>
+              <path d="M160,230 L220,225 L290,235 L340,250 L310,265 L220,250 L160,240 Z" class="svg-region danger-high selected" id="gis-region-jawa" onclick="selectGisRegion('Jawa', 89, 45, 'Banjir Rob & Gempa Patahan', 'Kab. Karawang, Kab. Subang, Pesisir Semarang')"></path>
+              <path d="M220,100 L270,80 L320,100 L340,140 L310,180 L250,190 L210,150 Z" class="svg-region danger-low" id="gis-region-kalimantan" onclick="selectGisRegion('Kalimantan', 12, 3, 'Karhutla Skala Kecil', 'Kab. Kapuas')"></path>
+              <path d="M360,110 L380,90 L400,120 L370,160 L390,190 L360,200 L350,150 Z" class="svg-region danger-medium" id="gis-region-sulawesi" onclick="selectGisRegion('Sulawesi', 54, 21, 'Tanah Longsor & Gempa', 'Kab. Sigi, Palu')"></path>
+              <path d="M350,255 L380,255 L420,260 L460,265 L460,275 L380,270 L350,260 Z" class="svg-region danger-medium" id="gis-region-nusatenggara" onclick="selectGisRegion('Nusa Tenggara & Bali', 62, 19, 'Gempa Vulkanik & Tsunami', 'Pesisir Selatan Bali, Sumbawa')"></path>
+              <path d="M440,120 L480,100 L500,140 L460,180 L430,150 Z" class="svg-region danger-low" id="gis-region-maluku" onclick="selectGisRegion('Maluku', 28, 8, 'Gempa Tektonik Laut', 'Pulau Seram')"></path>
+              <path d="M510,130 L590,110 L640,120 L630,210 L560,200 L520,170 Z" class="svg-region danger-medium" id="gis-region-papua" onclick="selectGisRegion('Papua', 45, 14, 'Tanah Longsor & Banjir Bandang', 'Sentani, Pegunungan Tengah')"></path>
+            </svg>
+          </div>
+
+          <!-- Selected Area Detail Matrix -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-borderNavy/20 border border-borderNavy p-5 rounded-2xl" id="gis-detail-matrix">
+            <div class="space-y-1">
+              <span class="text-[10px] text-secGray font-semibold uppercase tracking-wider">Wilayah Terpilih</span>
+              <h4 class="text-lg font-bold text-accentBlue" id="gis-matrix-name">Jawa</h4>
+            </div>
+            <div class="space-y-1 border-t md:border-t-0 md:border-x border-borderNavy/50 md:px-4">
+              <span class="text-[10px] text-secGray font-semibold uppercase tracking-wider">Kerentanan & Kejadian</span>
+              <p class="text-sm font-semibold text-slate-200" id="gis-matrix-stats">Indeks Kerentanan: <span class="text-accentRed">89%</span> • Riwayat: 45 Bencana</p>
+            </div>
+            <div class="space-y-1 md:pl-4">
+              <span class="text-[10px] text-secGray font-semibold uppercase tracking-wider">Zona Hotspot Mikro</span>
+              <p class="text-sm text-slate-300" id="gis-matrix-hotspot">Kab. Karawang, Kab. Subang, Pesisir Semarang</p>
+            </div>
+          </div>
+
+          <!-- Google Maps & Evacuation Routes Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Google Maps Live Viewport -->
+            <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
+              <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="compass" class="w-5 h-5 text-accentBlue"></i>
+                  <h3 class="font-bold text-base text-white">Google Maps Live Viewport</h3>
+                </div>
+                <span id="gis-coords-badge" class="text-[10px] font-mono text-accentBlue bg-accentBlue/10 border border-accentBlue/20 px-2.5 py-1 rounded-full">-6.2731, 107.8105</span>
+              </div>
+              
+              <!-- Iframe Viewport Container -->
+              <div class="rounded-xl overflow-hidden border border-borderNavy h-72 relative">
+                <iframe id="google-maps-iframe" class="w-full h-full border-0" src="https://maps.google.com/maps?q=-6.2731,107.8105&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+              </div>
+            </div>
+
+            <!-- Nearest Evacuation Routes Card -->
+            <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
+              <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="route" class="w-5 h-5 text-accentGreen"></i>
+                  <h3 class="font-bold text-base text-white">Titik Evakuasi Terdekat (Safe Havens)</h3>
+                </div>
+                <span class="text-xs text-secGray">Arah Rute Taktis</span>
+              </div>
+              
+              <!-- Evacuation Routes List -->
+              <div class="space-y-3 max-h-72 overflow-y-auto pr-1" id="evacuation-routes-list">
+                <!-- Injected dynamically by app.js based on selected region -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 3: ARSIP BENCANA ==================== -->
+      <section id="view-archives" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Left Panel: Upload Archive with dynamic classification and RBAC checks -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-2 mb-2">
+              <i data-lucide="plus-circle" class="w-5 h-5 text-accentBlue"></i>
+              <h3 class="font-bold text-base text-white">Unggah Arsip Bencana</h3>
+            </div>
+            
+            <form id="archive-upload-form" onsubmit="handleArchiveUpload(event)" class="space-y-3.5 text-xs">
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Judul Dokumen / Arsip</label>
+                <input type="text" id="arc-title" required placeholder="Contoh: Laporan Banjir Citarum 1996" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Jenis Bencana</label>
+                  <select id="arc-type" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                    <option value="Banjir">Banjir</option>
+                    <option value="Gempa">Gempa Bumi</option>
+                    <option value="Tsunami">Tsunami</option>
+                    <option value="Longsor">Tanah Longsor</option>
+                    <option value="Kekeringan">Kekeringan</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Tingkat Kerahasiaan</label>
+                  <select id="arc-classification" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                    <option value="Publik">Publik (Umum)</option>
+                    <option value="Internal">Internal (BPBD/BMKG)</option>
+                    <option value="Rahasia">Rahasia (TNI/POLRI)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Tanggal Kejadian</label>
+                  <input type="date" id="arc-date" required class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                </div>
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Lokasi Wilayah</label>
+                  <input type="text" id="arc-location" required placeholder="Kab. Karawang" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                </div>
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Deskripsi Singkat & Ringkasan</label>
+                <textarea id="arc-desc" required rows="3" placeholder="Uraikan laporan bencana, catatan evakuasi, instansi terdampak..." class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue resize-none"></textarea>
+              </div>
+              
+              <!-- File Drag & Drop Mock -->
+              <div class="border-2 border-dashed border-borderNavy hover:border-accentBlue rounded-xl p-4 text-center cursor-pointer transition-all">
+                <i data-lucide="upload-cloud" class="w-8 h-8 text-secGray mx-auto mb-1"></i>
+                <p class="text-[10px] text-secGray">Klik atau Seret file PDF, Gambar, atau Video (Maks. 25MB)</p>
+                <span class="text-[9px] text-accentBlue font-bold" id="archive-file-selected">Belum ada file dipilih</span>
+              </div>
+              
+              <button type="submit" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-accentBlue/25 flex items-center justify-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                Simpan ke Arsip Digital
+              </button>
+            </form>
+          </div>
+
+          <!-- Right Panel: Archive Explorer with Advanced Filters -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-4 border border-borderNavy">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-borderNavy pb-2.5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="folder-search" class="w-5 h-5 text-accentGreen"></i>
+                <h3 class="font-bold text-base text-white">Eksplorasi Arsip Terintegrasi</h3>
+              </div>
+              <span class="text-xs text-secGray"><span id="archive-count" class="text-accentBlue font-semibold">5</span> Arsip Ditemukan</span>
+            </div>
+
+            <!-- Advanced Search Filters -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="relative">
+                <input type="text" id="archive-search" oninput="filterArchives()" placeholder="Cari kata kunci..." class="w-full bg-deepNavy border border-borderNavy rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentBlue">
+                <i data-lucide="search" class="w-4 h-4 text-secGray absolute left-3 top-2.5"></i>
+              </div>
+              <div>
+                <select id="archive-filter-type" onchange="filterArchives()" class="w-full bg-deepNavy border border-borderNavy rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentBlue cursor-pointer">
+                  <option value="Semua">Semua Jenis Bencana</option>
+                  <option value="Banjir">Banjir</option>
+                  <option value="Gempa">Gempa Bumi</option>
+                  <option value="Tsunami">Tsunami</option>
+                  <option value="Longsor">Tanah Longsor</option>
+                </select>
+              </div>
+              <div>
+                <select id="archive-filter-classification" onchange="filterArchives()" class="w-full bg-deepNavy border border-borderNavy rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentBlue cursor-pointer">
+                  <option value="Semua">Semua Akses (Public/Restricted)</option>
+                  <option value="Publik">Akses Publik</option>
+                  <option value="Internal">Akses Internal</option>
+                  <option value="Rahasia">Rahasia Negara</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Archives List -->
+            <div class="space-y-3 overflow-y-auto max-h-[360px]" id="archives-list-container">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 4: DATA OPERASI LAPANGAN ==================== -->
+      <section id="view-operations" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Left Panel: Input Laporan Lapangan -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-2">
+              <i data-lucide="file-text" class="w-5 h-5 text-accentBlue"></i>
+              <h3 class="font-bold text-base text-white">Input Laporan Operasi Lapangan</h3>
+            </div>
+            
+            <form id="operation-report-form" onsubmit="handleOperationSubmit(event)" class="space-y-3 text-xs">
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Nama Lokasi Sektor</label>
+                <input type="text" id="op-location" required placeholder="RT 03/RW 04 Pamanukan Hilir" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Jumlah Pengungsi (Jiwa)</label>
+                  <input type="number" id="op-evacuees" required placeholder="0" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                </div>
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Status Logistik Wilayah</label>
+                  <select id="op-logistics" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                    <option value="Cukup">Cukup Aman</option>
+                    <option value="Kurang">Mulai Berkurang</option>
+                    <option value="Kritis">Kritis / Darurat</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Koordinat Lintang (Lat)</label>
+                  <input type="text" id="op-lat" required placeholder="-6.2345" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                </div>
+                <div>
+                  <label class="block text-secGray font-semibold mb-1">Bujur (Lng)</label>
+                  <input type="text" id="op-lng" required placeholder="107.8234" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                </div>
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Catatan Lapangan & Tindakan Tim</label>
+                <textarea id="op-notes" required rows="3" placeholder="Distribusi selimut selesai, evakuasi bot karet dikerahkan di sektor timur..." class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue resize-none"></textarea>
+              </div>
+              
+              <!-- Evidence Photo Upload Mock -->
+              <div class="border border-borderNavy hover:border-accentBlue rounded-xl p-3 text-center cursor-pointer transition-all bg-borderNavy/20">
+                <i data-lucide="image" class="w-6 h-6 text-secGray mx-auto mb-1"></i>
+                <p class="text-[9px] text-secGray">Unggah Foto Bukti Kejadian / Lapangan</p>
+                <span class="text-[8px] text-accentBlue font-bold" id="op-photo-selected">Belum ada foto</span>
+              </div>
+              
+              <button type="submit" class="w-full bg-accentGreen hover:bg-emerald-600 text-deepNavy font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-accentGreen/20 flex items-center justify-center gap-2">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                Kirim Laporan Operasi
+              </button>
+            </form>
+          </div>
+
+          <!-- Right Panel: Operations Logs & Evacuation Map -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-4 border border-borderNavy">
+            <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="clipboard-list" class="w-5 h-5 text-accentAmber"></i>
+                <h3 class="font-bold text-base text-white">Log Operasi Lapangan Aktif</h3>
+              </div>
+              <span class="text-xs text-secGray" id="operations-count">3 Laporan Lapangan</span>
+            </div>
+            
+            <div class="space-y-4 overflow-y-auto max-h-[380px]" id="operations-list-container">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 5: ANALITIK AI ==================== -->
+      <section id="view-ai-engine" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- AI Insights Summary Card (Left) -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy lg:col-span-1">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-3">
+              <div class="w-8 h-8 rounded-lg bg-accentBlue/10 flex items-center justify-center text-accentBlue">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-base text-white">Mesin Intelijen AI SEDAF</h3>
+            </div>
+            
+            <div class="space-y-4 text-xs">
+              <div class="p-3 bg-borderNavy/30 rounded-xl space-y-1">
+                <span class="text-[9px] font-bold text-accentGreen uppercase tracking-widest">Metode Analisis</span>
+                <p class="font-semibold text-white">Anomaly & Multidekade Trend Correlation</p>
+                <p class="text-[10px] text-secGray">Menganalisis korelasi curah hujan, pasang surut laut, serta arsip data tata guna lahan sejak tahun 1970 untuk prediksi mikro-regional.</p>
+              </div>
+
+              <div class="space-y-2">
+                <span class="text-secGray font-bold">Indikator Anomali Cuaca (BMKG API):</span>
+                <div class="flex items-center justify-between p-2.5 bg-accentRed/5 border border-accentRed/10 rounded-xl">
+                  <span class="text-slate-300">Anomali Suhu Muka Laut</span>
+                  <span class="text-accentRed font-bold">+1.85°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 bg-accentGreen/5 border border-accentGreen/10 rounded-xl">
+                  <span class="text-slate-300">Indeks El-Nino Southern</span>
+                  <span class="text-accentGreen font-bold">Netral</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 bg-accentAmber/5 border border-accentAmber/10 rounded-xl">
+                  <span class="text-slate-300">Kelembaban Tanah (Subang)</span>
+                  <span class="text-accentAmber font-bold">Kritis (Kering)</span>
+                </div>
+              </div>
+
+              <div class="p-3 bg-accentAmber/10 border border-accentAmber/20 rounded-xl">
+                <p class="font-bold text-accentAmber flex items-center gap-1 mb-1">
+                  <i data-lucide="alert-circle" class="w-4 h-4"></i> Anomali Terdeteksi
+                </p>
+                <p class="text-[10px] text-slate-300">Indikator anomali curah hujan di Jawa Barat terdeteksi di atas rata-rata 3 dekade (pencocokan arsip 1996, 2007, dan 2014).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic AI Predictions & Adaptation Sandbox (Right) -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-5 border border-borderNavy">
+            <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div>
+                <h3 class="font-bold text-base text-white">Prediksi Risiko & Rekomendasi Adaptasi AI</h3>
+                <p class="text-xs text-secGray">Model korelasi otomatis antara arsip sejarah bencana dan data lapangan.</p>
+              </div>
+              <button onclick="runAiPrediction()" class="bg-accentBlue hover:bg-blue-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition-all shadow-md shadow-accentBlue/10">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="ai-spin-icon"></i> Jalankan Simulasi AI
+              </button>
+            </div>
+
+            <!-- Prediction Results Display -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="ai-predictions-grid">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Easy-to-understand Summary Box -->
+            <div class="bg-borderNavy/30 border border-borderNavy p-4 rounded-xl space-y-2">
+              <h4 class="font-bold text-xs text-slate-200 flex items-center gap-1.5">
+                <i data-lucide="book-open" class="w-4 h-4 text-accentBlue"></i>
+                Ringkasan Analitis AI (Bahasa Mudah Dipahami)
+              </h4>
+              <p class="text-xs text-secGray leading-relaxed" id="ai-simple-insight">
+                Analisis AI mencocokkan curah hujan tinggi ekstrem saat ini dengan karakteristik banjir besar tahun 2007. Diperkirakan debit sungai Citarum akan meningkat tajam dalam 36 jam ke depan. Direkomendasikan kepada BPBD dan relawan untuk mempersiapkan pintu air Pamanukan dan mengevakuasi balita di zona risiko merah sebelum tengah malam.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 6: SOP & KNOWLEDGE BASE ==================== -->
+      <section id="view-knowledge" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Veteran Interview Converter (Left) -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-2">
+              <i data-lucide="microphone" class="w-5 h-5 text-accentBlue"></i>
+              <h3 class="font-bold text-base text-white">Tacit to Explicit (Wawancara Ahli)</h3>
+            </div>
+            <p class="text-xs text-secGray">Ubah ingatan lokal, testimoni masyarakat, dan wawancara sesepuh bencana menjadi SOP administratif terstruktur.</p>
+            
+            <div class="space-y-3.5 text-xs">
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Nama Veteran / Ahli</label>
+                <input type="text" id="wit-name" placeholder="Bpk. Wirya (Tokoh Masyarakat Pamanukan)" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Bencana Terkait</label>
+                <input type="text" id="wit-disaster" placeholder="Banjir Siklus 1996 & 2007" class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Transkrip Wawancara / Catatan Testimoni</label>
+                <textarea id="wit-transcript" rows="6" placeholder="Contoh: Dulu waktu tahun 96 banjir itu datangnya jam 3 pagi, mulainya dengan air parit yang keruh. Waktu itu kami memakai tanda bunyi tiang listrik 3 kali pukulan keras. Jalur lari paling aman itu mengarah ke mushola utara karena tanahnya tinggi, jangan sekali-kali lewat pematang barat karena tanahnya langsung longsor..." class="w-full bg-borderNavy border border-white/5 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue resize-none"></textarea>
+              </div>
+              
+              <button onclick="convertTacitToExplicit()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-accentBlue/25 flex items-center justify-center gap-2">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                Konversi AI Menjadi SOP Formal
+              </button>
+            </div>
+          </div>
+
+          <!-- Formal SOP & Best Practices Dashboard (Right) -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-4 border border-borderNavy">
+            <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="scroll" class="w-5 h-5 text-accentGreen"></i>
+                <h3 class="font-bold text-base text-white">Database SOP Kebijakan & Best Practice</h3>
+              </div>
+              <span class="text-xs text-secGray" id="sop-count">4 SOP Tersimpan</span>
+            </div>
+
+            <!-- Interactive Conversion Result Loading overlay -->
+            <div id="sop-conversion-result" class="hidden p-4 bg-accentBlue/5 border border-accentBlue/20 rounded-xl space-y-2.5 animate-fadeIn">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-accentBlue flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i> DRAF SOP DIHASILKAN MODEL AI SEDAF</span>
+                <span class="text-[10px] text-secGray">Siap Diverifikasi Instansi</span>
+              </div>
+              <h4 class="font-bold text-sm text-white" id="sop-res-title">SOP Mitigasi Penyelamatan Banjir Pamanukan</h4>
+              <div class="text-[11px] text-slate-300 space-y-1.5" id="sop-res-content">
+                <!-- Injected dynamically -->
+              </div>
+              <div class="flex justify-end gap-2 pt-2 border-t border-borderNavy">
+                <button onclick="discardSop()" class="px-3 py-1.5 rounded-lg border border-white/5 text-secGray hover:text-white hover:bg-borderNavy/50 text-[10px] font-semibold transition-all">Batalkan</button>
+                <button onclick="saveGeneratedSop()" class="px-3 py-1.5 rounded-lg bg-accentGreen text-deepNavy font-semibold text-[10px] hover:bg-emerald-600 transition-all">Simpan ke SOP Utama</button>
+              </div>
+            </div>
+
+            <!-- List of Existing SOPs -->
+            <div class="space-y-3.5 overflow-y-auto max-h-[360px]" id="sops-list-container">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 7: KOLABORASI INSTANSI ==================== -->
+      <section id="view-collaboration" class="page-view space-y-6">
+        <div class="glass-panel p-6 rounded-3xl space-y-6 border border-borderNavy shadow-2xl">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-borderNavy pb-4">
+            <div>
+              <h2 class="text-xl font-bold font-outfit text-white">Kolaborasi Data Lintas Instansi</h2>
+              <p class="text-xs text-secGray">Workflow persetujuan data, komentar koordinasi, dan verifikasi arsip kebencanaan.</p>
+            </div>
+            <span class="text-xs bg-accentAmber/10 text-accentAmber border border-accentAmber/20 px-3 py-1 rounded-full font-semibold">
+              Menunggu Review: <span id="collab-pending-count">2 Data</span>
+            </span>
+          </div>
+
+          <!-- Active Approvals Matrix -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-borderNavy text-secGray uppercase font-semibold text-[10px] tracking-wider">
+                <tr>
+                  <th class="p-3.5 rounded-l-xl">ID Data</th>
+                  <th class="p-3.5">Sumber Instansi</th>
+                  <th class="p-3.5">Judul Laporan / Arsip</th>
+                  <th class="p-3.5">Klasifikasi</th>
+                  <th class="p-3.5">Diajukan</th>
+                  <th class="p-3.5">Status Review</th>
+                  <th class="p-3.5 text-right rounded-r-xl">Tindakan Otoritas</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-borderNavy" id="collab-matrix-tbody">
+                <!-- Rendered dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Discussion & Inter-agency Logs -->
+          <div class="space-y-3">
+            <h3 class="font-bold text-sm text-slate-200">Forum Koordinasi Verifikasi Cepat</h3>
+            <div class="bg-borderNavy/20 border border-borderNavy rounded-xl p-4 space-y-3 max-h-52 overflow-y-auto" id="collab-comments-box">
+              <div class="text-xs space-y-1">
+                <div class="flex items-center justify-between text-secGray font-semibold text-[10px]">
+                  <span>[BNPB] Letkol. Budi Susilo</span>
+                  <span>14:02</span>
+                </div>
+                <p class="text-slate-300">"Mohon verifikasi arsip dari ANRI mengenai curah hujan historis Karawang 1996. Kami perlukan ini untuk mencocokkan indeks limpasan waduk Jatiluhur."</p>
+              </div>
+              <div class="text-xs space-y-1 pl-4 border-l border-accentBlue">
+                <div class="flex items-center justify-between text-secGray font-semibold text-[10px]">
+                  <span>[ANRI] Dra. Retno Wulandari</span>
+                  <span>14:15</span>
+                </div>
+                <p class="text-slate-300">"Arsip fisik berkode ANRI-KB/1996/JABAR sudah kami digitalisasikan dan diunggah. Silakan diperiksa, statusnya sudah kami set Publik agar BPBD langsung bisa memakai."</p>
+              </div>
+            </div>
+            
+            <!-- Comment Input -->
+            <div class="flex gap-2">
+              <input type="text" id="collab-comment-input" placeholder="Tulis catatan koordinasi / saran persetujuan..." class="flex-1 bg-deepNavy border border-borderNavy rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentBlue">
+              <button onclick="postCollabComment()" class="bg-accentBlue hover:bg-blue-600 text-white font-bold px-4 rounded-xl text-xs transition-colors">
+                Kirim
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 8: LAPORAN & MONITORING ==================== -->
+      <section id="view-reports" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Performance KPI Evaluation Dashboard (Left) -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy lg:col-span-1">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-3">
+              <i data-lucide="gauge" class="w-5 h-5 text-accentBlue"></i>
+              <h3 class="font-bold text-base text-white">Indikator Kinerja Sistem</h3>
+            </div>
+            
+            <div class="space-y-4 text-xs">
+              <div class="space-y-1">
+                <div class="flex justify-between">
+                  <span class="text-secGray font-semibold">Kecepatan Input Laporan</span>
+                  <span class="text-accentGreen font-bold">1.2 Menit (Sangat Cepat)</span>
+                </div>
+                <div class="w-full bg-borderNavy rounded-full h-2">
+                  <div class="bg-accentGreen h-2 rounded-full" style="width: 92%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between">
+                  <span class="text-secGray font-semibold">Kelengkapan Arsip Wilayah</span>
+                  <span class="text-accentBlue font-bold">88.5% (Tinggi)</span>
+                </div>
+                <div class="w-full bg-borderNavy rounded-full h-2">
+                  <div class="bg-accentBlue h-2 rounded-full" style="width: 88%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between">
+                  <span class="text-secGray font-semibold">Akurasi Prediksi AI (Uji Silang)</span>
+                  <span class="text-accentAmber font-bold">91.2% (Handal)</span>
+                </div>
+                <div class="w-full bg-borderNavy rounded-full h-2">
+                  <div class="bg-accentAmber h-2 rounded-full" style="width: 91%"></div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-borderNavy/30 border border-borderNavy rounded-xl space-y-1">
+                <span class="font-bold text-slate-300 block">Evaluasi Bulanan Kesiapan</span>
+                <p class="text-[10px] text-secGray">Seluruh instansi aktif mengunggah data dalam kurun 7 hari terakhir. Tidak terdeteksi adanya keterlambatan (bottleneck) validasi data oleh Nasional Admin.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Automated Reports Engine & Export Console (Right) -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-5 border border-borderNavy">
+            <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div>
+                <h3 class="font-bold text-base text-white">Generator Laporan Otomatis & Konsol Ekspor</h3>
+                <p class="text-xs text-secGray">Kompilasi arsip, laporan lapangan, dan index risiko untuk diseminasi berkas.</p>
+              </div>
+              <span class="text-xs text-secGray flex items-center gap-1"><i data-lucide="file-check" class="w-3.5 h-3.5 text-accentGreen"></i> PDF/Excel Ready</span>
+            </div>
+
+            <!-- Export Filters -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Periode Laporan</label>
+                <select id="rep-period" class="w-full bg-deepNavy border border-borderNavy rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                  <option value="Mingguan">Kompilasi Mingguan (7 Hari)</option>
+                  <option value="Bulanan">Kompilasi Bulanan (30 Hari)</option>
+                  <option value="Tahunan">Kompilasi Tahunan (2026)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Tingkat Kerahasiaan Ekspor</label>
+                <select id="rep-security" class="w-full bg-deepNavy border border-borderNavy rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                  <option value="Publik">Hanya Data Publik (Unrestricted)</option>
+                  <option value="Restricted">Seluruh Data (Memerlukan Otorisasi)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-secGray font-semibold mb-1">Format Berkas</label>
+                <select id="rep-format" class="w-full bg-deepNavy border border-borderNavy rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-accentBlue">
+                  <option value="CSV">Comma Separated (.CSV)</option>
+                  <option value="JSON">Raw JSON Schema (.JSON)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mock Report Preview Block -->
+            <div class="bg-deepNavy/60 border border-borderNavy p-4 rounded-xl space-y-3">
+              <div class="flex justify-between items-center border-b border-borderNavy pb-2 text-[10px] text-secGray">
+                <span>PRATINJAU RINGKASAN LAPORAN (SEDAF CORE ENGINE)</span>
+                <span>STATUS: READY FOR COMPILATION</span>
+              </div>
+              <div class="space-y-1.5 text-xs">
+                <p class="font-bold text-white uppercase tracking-wider text-center" id="report-title-preview">LAPORAN BULANAN KEADAAN STRATEGIS BENCANA</p>
+                <p class="text-[10px] text-center text-secGray">Periode: 17 April 2026 - 17 Mei 2026</p>
+                <ul class="space-y-1 text-slate-300 text-[11px] list-disc list-inside mt-3">
+                  <li>Total Kejadian Terpantau di Lapangan: 12 Bencana Banjir & Cuaca Ekstrim.</li>
+                  <li>Total Pengungsi Terdata & Dievakuasi: 2,450 Jiwa terbagi di 5 Posko Utama.</li>
+                  <li>Status Kelogistikan: 4 Sektor Aman, 1 Sektor Kritis (Pamanukan).</li>
+                  <li>Arsip Historis Baru Terunggah: 5 Berkas Laporan dari BPBD & ANRI.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="flex justify-end gap-3 text-xs">
+              <button onclick="triggerPrintReport()" class="bg-borderNavy hover:bg-borderNavy/80 text-white font-bold py-2.5 px-5 rounded-xl border border-white/5 transition-all flex items-center gap-1.5">
+                <i data-lucide="printer" class="w-4 h-4"></i> Cetak Laporan (PDF)
+              </button>
+              <button onclick="exportData()" class="bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5 shadow-lg shadow-accentBlue/20">
+                <i data-lucide="download" class="w-4 h-4"></i> Ekspor Berkas Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 9: PANEL ADMIN ==================== -->
+      <section id="view-admin-panel" class="page-view space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Role-Based Authorization Editor (Left) -->
+          <div class="glass-panel p-5 rounded-2xl space-y-4 border border-borderNavy lg:col-span-1">
+            <div class="flex items-center gap-2 border-b border-borderNavy pb-3">
+              <i data-lucide="shield-check" class="w-5 h-5 text-accentBlue"></i>
+              <h3 class="font-bold text-base text-white">Kontrol Otorisasi (RBAC)</h3>
+            </div>
+            
+            <div class="space-y-3.5 text-xs">
+              <div class="p-3 bg-borderNavy/30 border border-borderNavy rounded-xl">
+                <p class="font-bold text-slate-200 mb-1">Matriks Hak Akses Default</p>
+                <ul class="space-y-1 text-[10px] text-secGray">
+                  <li>• <strong class="text-accentRed">Admin:</strong> Hak Akses Penuh & Audit Trail.</li>
+                  <li>• <strong class="text-accentBlue">ANRI:</strong> Menyetujui & Klasifikasi Arsip.</li>
+                  <li>• <strong class="text-accentGreen">BPBD/Relawan:</strong> Menulis Laporan Lapangan.</li>
+                  <li>• <strong class="text-slate-300">Publik:</strong> Hanya Membaca Arsip Terbuka.</li>
+                </ul>
+              </div>
+
+              <!-- Quick Security Class Toggle Mock -->
+              <div class="space-y-2">
+                <label class="block text-secGray font-bold">Ubah Level Keamanan Default:</label>
+                <div class="flex gap-2">
+                  <button class="flex-1 bg-accentGreen/15 text-accentGreen border border-accentGreen/30 text-[10px] py-1.5 rounded-lg font-bold">NORMAL</button>
+                  <button class="flex-1 bg-borderNavy text-secGray text-[10px] py-1.5 rounded-lg border border-white/5">SIAGA</button>
+                  <button class="flex-1 bg-borderNavy text-secGray text-[10px] py-1.5 rounded-lg border border-white/5">PANIK</button>
+                </div>
+              </div>
+
+              <div class="p-3 bg-accentRed/5 border border-accentRed/10 rounded-xl">
+                <span class="font-bold text-accentRed flex items-center gap-1 mb-1"><i data-lucide="alert-triangle" class="w-4 h-4"></i> Proteksi Audit</span>
+                <p class="text-[10px] text-secGray">Tiap perubahan klasifikasi kerahasiaan (*Rahasia Negara*) dicatat pada Audit Trail terenkripsi secara otomatis.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audit Trail Logs Display (Right) -->
+          <div class="glass-panel p-5 rounded-2xl lg:col-span-2 space-y-4 border border-borderNavy">
+            <div class="flex items-center justify-between border-b border-borderNavy pb-2.5">
+              <div>
+                <h3 class="font-bold text-base text-white">Log Audit Trail Keamanan Sistem</h3>
+                <p class="text-xs text-secGray">Rekaman riwayat perubahan klasifikasi, persetujuan data, dan tindakan pengguna.</p>
+              </div>
+              <span class="text-xs bg-borderNavy border border-white/5 px-2.5 py-1 rounded-full text-secGray">Audit Mode</span>
+            </div>
+
+            <!-- List of Audit Logs -->
+            <div class="space-y-3 overflow-y-auto max-h-[360px]" id="audit-trail-container">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==================== VIEW 10: PROFIL PENGGUNA ==================== -->
+      <section id="view-profile" class="page-view space-y-6">
+        <div class="glass-panel p-6 rounded-3xl max-w-2xl mx-auto space-y-6 border border-borderNavy shadow-2xl">
+          
+          <div class="flex flex-col sm:flex-row items-center gap-6 border-b border-borderNavy pb-6">
+            <!-- User Avatar Avatar -->
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-accentBlue to-accentGreen p-1 shadow-xl shadow-accentBlue/10 shrink-0">
+              <div class="w-full h-full bg-cardNavy rounded-[14px] flex items-center justify-center text-accentBlue">
+                <i data-lucide="user" class="w-12 h-12"></i>
+              </div>
+            </div>
+            
+            <div class="text-center sm:text-left space-y-1">
+              <h3 class="text-xl font-bold font-outfit text-white" id="profile-name">Kolonel (TNI) Dr. Haryanto</h3>
+              <p class="text-xs text-secGray flex items-center justify-center sm:justify-start gap-1">
+                <i data-lucide="building" class="w-3.5 h-3.5"></i>
+                <span id="profile-institution">BPBD / Komando Penanganan Darurat</span>
+              </p>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-2">
+                <span class="text-[10px] font-bold bg-accentBlue/20 text-accentBlue border border-accentBlue/30 px-3 py-1 rounded-full" id="profile-role-badge">
+                  Role: BNPB / BPBD
+                </span>
+                <span class="text-[10px] font-bold bg-accentGreen/15 text-accentGreen border border-accentGreen/30 px-3 py-1 rounded-full">
+                  Status: Aktif / Terverifikasi
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Details Form Matrix -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-3 bg-borderNavy/20 border border-borderNavy/50 rounded-xl space-y-1">
+              <span class="text-[10px] text-secGray font-bold uppercase">Nomor Identitas Pegawai / Lembaga</span>
+              <p class="text-slate-200 font-semibold">NIP. 19780512 200501 1 002</p>
+            </div>
+            <div class="p-3 bg-borderNavy/20 border border-borderNavy/50 rounded-xl space-y-1">
+              <span class="text-[10px] text-secGray font-bold uppercase">Surel Otoritas Resmi</span>
+              <p class="text-slate-200 font-semibold" id="profile-email">haryanto@bpbd.go.id</p>
+            </div>
+            <div class="p-3 bg-borderNavy/20 border border-borderNavy/50 rounded-xl space-y-1">
+              <span class="text-[10px] text-secGray font-bold uppercase">Wilayah Penugasan Utama</span>
+              <p class="text-slate-200 font-semibold">Provinsi Jawa Barat & Pantura</p>
+            </div>
+            <div class="p-3 bg-borderNavy/20 border border-borderNavy/50 rounded-xl space-y-1">
+              <span class="text-[10px] text-secGray font-bold uppercase">Kewenangan Akses Berkas</span>
+              <p class="text-slate-200 font-semibold" id="profile-scope">Tingkat Internal & Rahasia Lapangan</p>
+            </div>
+          </div>
+
+          <div class="bg-borderNavy/10 border border-borderNavy p-4 rounded-xl text-xs space-y-2">
+            <h4 class="font-bold text-slate-200 flex items-center gap-1.5">
+              <i data-lucide="key" class="w-4 h-4 text-accentAmber"></i>
+              Kunci Keamanan API Publik & Kredensial
+            </h4>
+            <p class="text-[10px] text-secGray">Gunakan kunci API di bawah untuk integrasi sensor stasiun BPBD/BMKG lokal Anda ke portal utama SEDAF.</p>
+            <div class="flex gap-2">
+              <input type="text" readonly value="sd_live_8f3c7e4a1b0d6c9e8f7a" class="flex-1 bg-deepNavy border border-borderNavy rounded-lg px-3 py-1.5 text-[10px] font-mono text-accentAmber select-all focus:outline-none">
+              <button onclick="navigator.clipboard.writeText('sd_live_8f3c7e4a1b0d6c9e8f7a'); showToast('Kunci API disalin ke papan klip!', 'success');" class="bg-borderNavy hover:bg-borderNavy/80 text-white px-3 rounded-lg text-[10px] border border-white/5">Salin</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 11: ENSIKLOPEDIA BUDAYA ==================== -->
+      <section id="view-ensiklopedia" class="page-view space-y-6">
+
+        <!-- ===== LANDING: KATEGORI ENSIKLOPEDIA ===== -->
+        <div id="encyclo-landing" class="space-y-6 kayori-fade-in">
+          <!-- Hero Banner -->
+          <div class="relative bg-gradient-to-br from-[#1A1200] via-cardNavy to-deepNavy rounded-3xl p-6 md:p-8 border border-accentAmber/20 overflow-hidden shadow-2xl">
+            <div class="absolute right-0 top-0 w-80 h-80 bg-accentAmber/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 bottom-0 w-60 h-60 bg-accentRed/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="max-w-2xl relative z-10">
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold kayori-heritage-badge mb-3 uppercase tracking-wide">
+                <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
+                Warisan Kebencanaan Nusantara
+              </span>
+              <h2 class="text-2xl md:text-3xl font-extrabold font-outfit text-white tracking-tight mb-2">Ensiklopedia Budaya Mitigasi Bencana</h2>
+              <p class="text-sm text-secGray leading-relaxed mb-5">Kumpulan kearifan lokal, tradisi lisan, dan sistem pengetahuan masyarakat adat Indonesia dalam menghadapi bencana alam—diarsipkan sebagai bagian dari memori kebangsaan.</p>
+              <div class="flex items-center gap-3 text-xs text-secGray">
+                <span class="flex items-center gap-1.5"><i data-lucide="scroll-text" class="w-3.5 h-3.5 text-accentAmber"></i> 1 Entri Tersedia</span>
+                <span class="w-1 h-1 rounded-full bg-borderNavy"></span>
+                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-accentBlue"></i> Sulawesi Tengah</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <!-- Kategori Kayori (AKTIF) -->
+            <div onclick="showKayoriDetail()" class="encyclo-cat-card cursor-pointer glass-panel border border-accentAmber/30 hover:border-accentAmber/60 rounded-2xl p-5 space-y-4">
+              <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accentAmber/25 to-accentRed/15 flex items-center justify-center shadow-lg">
+                  <i data-lucide="waves" class="w-6 h-6 text-accentAmber"></i>
+                </div>
+                <span class="text-[9px] font-bold kayori-heritage-badge px-2 py-0.5 rounded-full uppercase tracking-wider">Tersedia</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-base text-white font-outfit">Kayori</h3>
+                <p class="text-xs text-secGray mt-1 leading-relaxed">Tradisi lisan mitigasi gempa & tsunami suku Kaili, Sulawesi Tengah. Warisan peringatan dini turun-temurun.</p>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-borderNavy/50 text-[10px] text-secGray">
+                <span><i data-lucide="map-pin" class="w-3 h-3 inline mr-1 text-accentAmber"></i>Palu, Sulawesi Tengah</span>
+                <span class="text-accentAmber font-semibold flex items-center gap-1">Buka <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+              </div>
+            </div>
+
+            <!-- Kategori Placeholder 2 -->
+            <div class="encyclo-cat-card glass-panel border border-borderNavy rounded-2xl p-5 space-y-4 opacity-50 cursor-not-allowed">
+              <div class="w-12 h-12 rounded-xl bg-borderNavy/60 flex items-center justify-center">
+                <i data-lucide="mountain" class="w-6 h-6 text-secGray"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-base text-slate-400 font-outfit">Pranata Mangsa</h3>
+                <p class="text-xs text-secGray mt-1">Sistem kalender agraris Jawa untuk membaca tanda alam musim dan bencana.</p>
+              </div>
+              <div class="pt-2 border-t border-borderNavy/50 text-[10px] text-secGray flex items-center gap-1">
+                <i data-lucide="lock" class="w-3 h-3"></i> Segera Hadir
+              </div>
+            </div>
+
+            <!-- Kategori Placeholder 3 -->
+            <div class="encyclo-cat-card glass-panel border border-borderNavy rounded-2xl p-5 space-y-4 opacity-50 cursor-not-allowed">
+              <div class="w-12 h-12 rounded-xl bg-borderNavy/60 flex items-center justify-center">
+                <i data-lucide="tree-pine" class="w-6 h-6 text-secGray"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-base text-slate-400 font-outfit">Sasi Laut</h3>
+                <p class="text-xs text-secGray mt-1">Hukum adat Maluku tentang larangan merusak ekosistem laut sebagai perlindungan pesisir.</p>
+              </div>
+              <div class="pt-2 border-t border-borderNavy/50 text-[10px] text-secGray flex items-center gap-1">
+                <i data-lucide="lock" class="w-3 h-3"></i> Segera Hadir
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== DETAIL PAGE: KAYORI ===== -->
+        <div id="kayori-detail" class="hidden space-y-6">
+
+          <!-- Breadcrumb back button -->
+          <div class="kayori-fade-in-delay-1">
+            <button onclick="backToEncycloLanding()" class="flex items-center gap-2 text-xs text-secGray hover:text-accentAmber transition-colors font-semibold">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              Kembali ke Ensiklopedia
+            </button>
+          </div>
+
+          <!-- HERO HEADER -->
+          <div class="relative bg-gradient-to-br from-[#1A0F00] via-[#1C1830] to-deepNavy rounded-3xl p-6 md:p-10 border border-accentAmber/25 overflow-hidden shadow-2xl kayori-fade-in-delay-1">
+            <div class="absolute right-0 top-0 w-96 h-96 bg-accentAmber/6 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute left-0 bottom-0 w-72 h-72 bg-accentBlue/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
+              <!-- Icon Area -->
+              <div class="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-2xl bg-gradient-to-br from-accentAmber/30 to-accentRed/20 border border-accentAmber/30 flex items-center justify-center shadow-2xl shadow-accentAmber/10">
+                <i data-lucide="waves" class="w-10 h-10 md:w-12 md:h-12 text-accentAmber"></i>
+              </div>
+
+              <!-- Title Block -->
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <span class="text-[9px] font-bold kayori-heritage-badge px-2.5 py-1 rounded-full uppercase tracking-widest">Tradisi Lisan</span>
+                  <span class="text-[9px] font-bold bg-accentBlue/15 text-accentBlue border border-accentBlue/30 px-2.5 py-1 rounded-full uppercase tracking-widest">Sulawesi Tengah</span>
+                  <span class="text-[9px] font-bold bg-accentGreen/15 text-accentGreen border border-accentGreen/30 px-2.5 py-1 rounded-full uppercase tracking-widest flex items-center gap-1">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i> Terverifikasi SEDAF
+                  </span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold font-outfit text-white tracking-tight leading-tight">
+                  Kayori – Warisan Mitigasi Bencana Masyarakat Kaili
+                </h1>
+                <p class="text-sm text-accentAmber/80 font-medium italic">Tradisi Lisan Gempa dan Tsunami dari Sulawesi Tengah</p>
+                <p class="text-xs text-secGray flex items-center gap-1.5 mt-1">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-accentAmber"></i>
+                  <strong class="text-slate-300">Asal Daerah:</strong> Palu, Sulawesi Tengah
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MAIN CONTENT GRID -->
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+            <!-- LEFT COLUMN (wider) -->
+            <div class="lg:col-span-3 space-y-5">
+
+              <!-- SECTION 1: Bahasa Asli Kaili -->
+              <div class="glass-panel rounded-2xl border border-borderNavy shadow-lg overflow-hidden kayori-fade-in-delay-2">
+                <div class="px-5 pt-5 pb-3 border-b border-borderNavy/60 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-accentAmber/15 flex items-center justify-center">
+                    <i data-lucide="scroll-text" class="w-4 h-4 text-accentAmber"></i>
+                  </div>
+                  <div>
+                    <h2 class="font-bold text-base text-white font-outfit">Kayori</h2>
+                    <p class="text-[10px] text-secGray">Bahasa Kaili — Suku Kaili, Sulawesi Tengah</p>
+                  </div>
+                </div>
+
+                <div class="p-5 space-y-5">
+                  <!-- Teks Bahasa Kaili -->
+                  <div class="kayori-quote-box p-5 md:p-6">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-accentAmber/80 mb-3">Bahasa Asli (Kaili)</p>
+                    <p class="text-xl md:text-2xl font-bold text-white font-serif italic leading-relaxed tracking-wide">
+                      "Ane tana nggoro, pai mombetana ri bulu."
+                    </p>
+                    <p class="text-[10px] text-secGray mt-3 flex items-center gap-1.5">
+                      <i data-lucide="volume-2" class="w-3 h-3"></i>
+                      Diucapkan turun-temurun sebagai peringatan lisan kepada warga suku Kaili
+                    </p>
+                  </div>
+
+                  <hr class="kayori-divider">
+
+                  <!-- Terjemahan Indonesia -->
+                  <div class="kayori-translation-box p-5">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-accentGreen/80 mb-3">Arti dalam Bahasa Indonesia</p>
+                    <p class="text-lg md:text-xl font-semibold text-slate-100 leading-relaxed">
+                      "Jika tanah berguncang, segeralah pergi ke perbukitan."
+                    </p>
+                    <p class="text-xs text-secGray mt-3 leading-relaxed">
+                      Kalimat ini adalah instruksi evakuasi mandiri yang disampaikan dalam bentuk syair lisan. Mengandung dua elemen kunci: <strong class="text-slate-300">penanda bahaya</strong> (tanah berguncang/gempa) dan <strong class="text-slate-300">tindakan evakuasi</strong> (pergi ke perbukitan/menjauhi pesisir).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECTION 2: Fungsi Kayori -->
+              <div class="glass-panel rounded-2xl border border-borderNavy shadow-lg overflow-hidden kayori-fade-in-delay-3">
+                <div class="px-5 pt-5 pb-3 border-b border-borderNavy/60 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-accentBlue/15 flex items-center justify-center">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-accentBlue"></i>
+                  </div>
+                  <div>
+                    <h2 class="font-bold text-base text-white font-outfit">Fungsi Kayori</h2>
+                    <p class="text-[10px] text-secGray">Peran dalam sistem mitigasi bencana masyarakat adat</p>
+                  </div>
+                </div>
+
+                <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <!-- Fungsi 1 -->
+                  <div class="kayori-func-card glass-card border border-borderNavy/80 rounded-xl p-4 space-y-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-lg bg-accentRed/15 flex items-center justify-center shrink-0">
+                        <i data-lucide="siren" class="w-4 h-4 text-accentRed"></i>
+                      </div>
+                      <h4 class="font-bold text-sm text-slate-100 leading-tight">Peringatan Dini Gempa & Tsunami</h4>
+                    </div>
+                    <p class="text-[11px] text-secGray leading-relaxed pl-10">Berfungsi sebagai sistem peringatan berbasis memori kolektif—tanpa teknologi—yang mengaktifkan respons warga saat gempa terjadi.</p>
+                  </div>
+
+                  <!-- Fungsi 2 -->
+                  <div class="kayori-func-card glass-card border border-borderNavy/80 rounded-xl p-4 space-y-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-lg bg-accentGreen/15 flex items-center justify-center shrink-0">
+                        <i data-lucide="footprints" class="w-4 h-4 text-accentGreen"></i>
+                      </div>
+                      <h4 class="font-bold text-sm text-slate-100 leading-tight">Mengajarkan Evakuasi Mandiri</h4>
+                    </div>
+                    <p class="text-[11px] text-secGray leading-relaxed pl-10">Instruksi "pergi ke perbukitan" menanamkan arah evakuasi yang tepat secara vertikal—menjauhi pantai dan menuju dataran tinggi.</p>
+                  </div>
+
+                  <!-- Fungsi 3 -->
+                  <div class="kayori-func-card glass-card border border-borderNavy/80 rounded-xl p-4 space-y-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
+                        <i data-lucide="brain" class="w-4 h-4 text-purple-400"></i>
+                      </div>
+                      <h4 class="font-bold text-sm text-slate-100 leading-tight">Menjaga Memori Bencana Leluhur</h4>
+                    </div>
+                    <p class="text-[11px] text-secGray leading-relaxed pl-10">Syair ini merekam pengalaman tsunami historis masyarakat Kaili dan melestarikannya lintas generasi tanpa catatan tertulis.</p>
+                  </div>
+
+                  <!-- Fungsi 4 -->
+                  <div class="kayori-func-card glass-card border border-borderNavy/80 rounded-xl p-4 space-y-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-lg bg-accentBlue/15 flex items-center justify-center shrink-0">
+                        <i data-lucide="graduation-cap" class="w-4 h-4 text-accentBlue"></i>
+                      </div>
+                      <h4 class="font-bold text-sm text-slate-100 leading-tight">Pendidikan Mitigasi Turun-Temurun</h4>
+                    </div>
+                    <p class="text-[11px] text-secGray leading-relaxed pl-10">Diajarkan kepada anak-anak melalui tradisi lisan, sehingga pengetahuan kebencanaan menjadi bagian dari identitas budaya.</p>
+                  </div>
+
+                  <!-- Fungsi 5 — full width -->
+                  <div class="kayori-func-card glass-card border border-borderNavy/80 rounded-xl p-4 space-y-2 sm:col-span-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-lg bg-accentAmber/15 flex items-center justify-center shrink-0">
+                        <i data-lucide="eye" class="w-4 h-4 text-accentAmber"></i>
+                      </div>
+                      <h4 class="font-bold text-sm text-slate-100 leading-tight">Membangun Kesadaran Terhadap Tanda Alam</h4>
+                    </div>
+                    <p class="text-[11px] text-secGray leading-relaxed pl-10">Kayori melatih kepekaan warga terhadap sinyal alam—getaran tanah, surutnya air laut tiba-tiba—sebagai tanda bahaya yang harus segera ditindaklanjuti.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN (sidebar info) -->
+            <div class="lg:col-span-2 space-y-5">
+
+              <!-- Info Card -->
+              <div class="glass-panel rounded-2xl border border-borderNavy shadow-lg p-5 space-y-4 kayori-fade-in-delay-2">
+                <h3 class="font-bold text-sm text-white border-b border-borderNavy pb-2.5 flex items-center gap-2">
+                  <i data-lucide="info" class="w-4 h-4 text-accentBlue"></i>
+                  Metadata Budaya
+                </h3>
+                <div class="space-y-3 text-xs">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Nama Tradisi</span>
+                    <span class="font-bold text-slate-200 text-right">Kayori</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Bahasa</span>
+                    <span class="font-bold text-slate-200 text-right">Kaili (To Kaili)</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Asal Suku</span>
+                    <span class="font-bold text-slate-200 text-right">Suku Kaili</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Wilayah</span>
+                    <span class="font-bold text-accentAmber text-right">Palu, Sulawesi Tengah</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Kategori</span>
+                    <span class="font-bold text-slate-200 text-right">Tradisi Lisan / Kearifan Lokal</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Jenis Bencana</span>
+                    <span class="font-bold text-slate-200 text-right">Gempa Bumi & Tsunami</span>
+                  </div>
+                  <hr class="kayori-divider">
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-secGray shrink-0">Status Warisaan</span>
+                    <span class="font-bold text-accentGreen text-right flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Aktif & Hidup</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Relevansi dengan Bencana 2018 -->
+              <div class="glass-panel rounded-2xl border border-accentRed/20 shadow-lg p-5 space-y-3 kayori-fade-in-delay-3">
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                  <i data-lucide="alert-triangle" class="w-4 h-4 text-accentRed"></i>
+                  Relevansi Historis
+                </h3>
+                <p class="text-xs text-secGray leading-relaxed">
+                  Bencana gempa & tsunami Palu 2018 menelan ribuan korban jiwa. Namun warga yang tinggal di kawasan perbukitan dan yang menerapkan pengetahuan leluhur seperti Kayori <strong class="text-slate-200">selamat karena langsung berlari ke bukit</strong> saat gempa pertama terasa.
+                </p>
+                <div class="bg-accentRed/8 border border-accentRed/20 rounded-xl p-3 text-xs">
+                  <p class="font-semibold text-accentRed mb-1">Palu Tsunami, 28 September 2018</p>
+                  <p class="text-secGray">Magnitude 7.5 SR · ±4.340 korban jiwa · Ketinggian gelombang hingga 11 meter.</p>
+                </div>
+              </div>
+
+              <!-- Relevansi SEDAF -->
+              <div class="glass-panel rounded-2xl border border-accentGreen/20 shadow-lg p-5 space-y-3 kayori-fade-in-delay-4">
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                  <i data-lucide="shield" class="w-4 h-4 text-accentGreen"></i>
+                  Relevansi SEDAF
+                </h3>
+                <p class="text-xs text-secGray leading-relaxed">
+                  SEDAF mengarsipkan tradisi Kayori sebagai komponen sistem pengetahuan tacit-to-explicit—mengintegrasikan memori budaya lokal ke dalam SOP mitigasi modern bersama data ilmiah BMKG dan BNPB.
+                </p>
+                <button onclick="switchView('knowledge')" class="w-full bg-accentGreen/15 hover:bg-accentGreen/25 border border-accentGreen/30 text-accentGreen text-xs font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4"></i>
+                  Lihat SOP & Knowledge Base
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- FOOTER STATUS BAR -->
+    <footer class="h-8 bg-cardNavy border-t border-borderNavy px-6 flex items-center justify-between text-[10px] text-secGray select-none pb-20 md:pb-0">
+      <span>© 2026 SEDAF (Strategic Eco-Defense Archives Framework). All Rights Reserved.</span>
+      <span class="hidden sm:inline font-mono">Build v1.0.4-MVP • PWA Cache: Enabled</span>
+    </footer>
+
+  </main>
+
+  <!-- ==================== MOBILE BOTTOM NAVIGATION BAR ==================== -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-cardNavy border-t border-borderNavy flex items-center justify-around z-50 px-2 shadow-2xl transition-colors duration-300">
+    <button onclick="switchView('dashboard')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1 active" id="m-nav-dashboard">
+      <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">Home</span>
+    </button>
+    <button onclick="switchView('gis')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1" id="m-nav-gis">
+      <i data-lucide="map" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">Peta GIS</span>
+    </button>
+    <button onclick="switchView('archives')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1" id="m-nav-archives">
+      <i data-lucide="archive" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">Arsip</span>
+    </button>
+    <button onclick="switchView('operations')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1" id="m-nav-operations">
+      <i data-lucide="activity" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">Operasi</span>
+    </button>
+    <button onclick="switchView('ai-engine')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1" id="m-nav-ai-engine">
+      <i data-lucide="brain" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">AI Engine</span>
+    </button>
+    <button onclick="switchView('ensiklopedia')" class="mobile-nav-link flex flex-col items-center justify-center text-secGray hover:text-white transition-colors flex-1 py-1" id="m-nav-ensiklopedia">
+      <i data-lucide="landmark" class="w-5 h-5"></i>
+      <span class="text-[9px] mt-1 font-semibold">Warisan</span>
+    </button>
+  </div>
+
+  <!-- ==================== CORE APP JAVASCRIPT ==================== -->
+  <script src="app.js"></script>
+</body>
+</html>

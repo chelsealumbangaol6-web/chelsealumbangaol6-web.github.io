@@ -1,0 +1,543 @@
+/* Core Theme Variables and Custom Styles for SEDAF */
+
+:root {
+  --bg-primary: #0A0F1D;
+  --bg-secondary: #141C33;
+  --bg-tertiary: #1E294B;
+  --accent-blue: #3A86FF;
+  --accent-green: #06D6A0;
+  --accent-amber: #FFD166;
+  --accent-red: #EF476F;
+  --text-primary: #F8F9FA;
+  --text-secondary: #94A3B8;
+  --transition-fast: 0.2s ease-in-out;
+}
+
+/* Custom Scrollbar to match premium dark UI */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+#splash-screen {
+  transition: opacity 0.35s ease;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(20, 28, 51, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(30, 41, 75, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all var(--transition-fast);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(58, 134, 255, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(58, 134, 255, 0.1);
+}
+
+/* Warning & Indicator Lights */
+.pulse-red {
+  box-shadow: 0 0 0 0 rgba(239, 71, 111, 0.7);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 71, 111, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(239, 71, 111, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 71, 111, 0);
+  }
+}
+
+.pulse-green {
+  box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(6, 214, 160, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0);
+  }
+}
+
+/* SVG Interactive Map Styling */
+.svg-region {
+  fill: #1E294B;
+  stroke: #2E3E66;
+  stroke-width: 1.5;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.svg-region:hover {
+  fill: #2E3E66;
+  stroke: #3A86FF;
+}
+
+.svg-region.selected {
+  fill: #3A86FF !important;
+  stroke: #F8F9FA;
+  filter: drop-shadow(0px 0px 8px rgba(58, 134, 255, 0.5));
+}
+
+.svg-region.danger-high {
+  fill: rgba(239, 71, 111, 0.4);
+  stroke: #EF476F;
+}
+
+.svg-region.danger-high:hover {
+  fill: rgba(239, 71, 111, 0.7);
+}
+
+.svg-region.danger-medium {
+  fill: rgba(255, 209, 102, 0.3);
+  stroke: #FFD166;
+}
+
+.svg-region.danger-medium:hover {
+  fill: rgba(255, 209, 102, 0.6);
+}
+
+.svg-region.danger-low {
+  fill: rgba(6, 214, 160, 0.3);
+  stroke: #06D6A0;
+}
+
+.svg-region.danger-low:hover {
+  fill: rgba(6, 214, 160, 0.6);
+}
+
+/* Page View Visibility */
+.page-view {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.page-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Side navigation active styling */
+.nav-link.active {
+  background: rgba(58, 134, 255, 0.15);
+  color: var(--text-primary);
+  border-left: 4px solid var(--accent-blue);
+}
+
+/* Customized Status Badges */
+.badge-publik {
+  background-color: rgba(6, 214, 160, 0.15);
+  color: var(--accent-green);
+}
+
+.badge-internal {
+  background-color: rgba(255, 209, 102, 0.15);
+  color: var(--accent-amber);
+}
+
+.badge-rahasia {
+  background-color: rgba(239, 71, 111, 0.15);
+  color: var(--accent-red);
+}
+
+/* Loader style */
+.loader {
+  border-top-color: #3A86FF;
+  animation: spinner 1.5s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== LIGHT MODE FRIENDLY OVERRIDES ==================== */
+.light-mode {
+  --bg-primary: #F8FAFC;
+  /* Slate 50 */
+  --bg-secondary: #FFFFFF;
+  /* Pure White */
+  --bg-tertiary: #E2E8F0;
+  /* Slate 200 */
+  --text-primary: #0F172A;
+  /* Slate 900 */
+  --text-secondary: #475569;
+  /* Slate 600 - High Contrast Gray */
+}
+
+/* Base Body Transition for Theme Toggle */
+body.light-mode {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Ensure bold and standard fonts adapt in light mode */
+.light-mode h1,
+.light-mode h2,
+.light-mode h3,
+.light-mode h4,
+.light-mode h5,
+.light-mode h6,
+.light-mode p,
+.light-mode li,
+.light-mode label,
+.light-mode td,
+.light-mode th {
+  color: var(--text-primary) !important;
+}
+
+/* Override all light color classes directly */
+.light-mode .text-white,
+.light-mode .text-slate-50,
+.light-mode .text-slate-100,
+.light-mode .text-slate-200,
+.light-mode .text-slate-300,
+.light-mode .text-gray-50,
+.light-mode .text-gray-100,
+.light-mode .text-gray-200,
+.light-mode .text-gray-300 {
+  color: var(--text-primary) !important;
+}
+
+/* High contrast secondary and muted text color */
+.light-mode .text-secGray,
+.light-mode .text-slate-400,
+.light-mode .text-gray-400,
+.light-mode .text-slate-500,
+.light-mode .text-gray-500,
+.light-mode span.text-secGray,
+.light-mode p.text-secGray,
+.light-mode .text-\[10px\],
+.light-mode .text-\[9px\] {
+  color: var(--text-secondary) !important;
+}
+
+/* Maintain accent text visibility with increased contrast for white bg */
+.light-mode .text-accentBlue {
+  color: #2563EB !important;
+  /* Slightly deeper blue */
+}
+
+.light-mode .text-accentGreen {
+  color: #059669 !important;
+  /* Deeper green */
+}
+
+.light-mode .text-accentAmber {
+  color: #D97706 !important;
+  /* Deeper amber */
+}
+
+.light-mode .text-accentRed {
+  color: #DC2626 !important;
+  /* Deeper red */
+}
+
+/* Adaptive Tailwind Helpers inside Light Mode scope */
+.light-mode .bg-deepNavy {
+  background-color: var(--bg-primary) !important;
+}
+
+.light-mode .bg-cardNavy {
+  background-color: var(--bg-secondary) !important;
+}
+
+.light-mode .bg-cardNavy\/80 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.light-mode .bg-deepNavy\/60 {
+  background-color: rgba(226, 232, 240, 0.5) !important;
+}
+
+.light-mode .border-borderNavy {
+  border-color: var(--bg-tertiary) !important;
+}
+
+.light-mode .border-white\/5 {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+.light-mode .border-borderNavy\/50 {
+  border-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+.light-mode .glass-panel {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05) !important;
+}
+
+.light-mode .glass-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: rgba(15, 23, 42, 0.05) !important;
+  box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.04) !important;
+}
+
+.light-mode .glass-card:hover {
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.15) !important;
+}
+
+.light-mode .bg-borderNavy\/20 {
+  background-color: rgba(226, 232, 240, 0.3) !important;
+}
+
+.light-mode .bg-borderNavy\/30 {
+  background-color: rgba(226, 232, 240, 0.4) !important;
+}
+
+.light-mode .bg-borderNavy\/50 {
+  background-color: rgba(226, 232, 240, 0.5) !important;
+}
+
+.light-mode .bg-borderNavy {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Header logo gradient text readability fix */
+.light-mode h1.bg-clip-text {
+  background-image: none !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+.light-mode select {
+  background-color: #FFFFFF !important;
+  color: var(--text-primary) !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light-mode input,
+.light-mode textarea {
+  background-color: #FFFFFF !important;
+  color: var(--text-primary) !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light-mode input::placeholder,
+.light-mode textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Table elements in light mode */
+.light-mode thead {
+  background-color: #F1F5F9 !important;
+}
+
+.light-mode tr {
+  border-bottom-color: #E2E8F0 !important;
+}
+
+.light-mode tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+/* SVG Region styling in Light Mode */
+.light-mode .svg-region {
+  fill: #E2E8F0;
+  stroke: #CBD5E1;
+}
+
+.light-mode .svg-region:hover {
+  fill: #CBD5E1;
+  stroke: #3A86FF;
+}
+
+.light-mode .svg-region.selected {
+  fill: #3A86FF !important;
+  stroke: #FFFFFF;
+}
+
+.light-mode .bg-gradient-to-r {
+  background-image: linear-gradient(to right, #FFFFFF, #F1F5F9, #F8FAFC) !important;
+  border-color: var(--bg-tertiary) !important;
+}
+
+/* Mobile Bottom Navigation Styles */
+.mobile-nav-link.active {
+  color: #2563EB !important;
+}
+
+.light-mode .mobile-nav-link.active {
+  color: #2563EB !important;
+}
+
+/* ==================== KAYORI ENCYCLOPEDIA STYLES ==================== */
+
+/* Fade-in animation for encyclopedia page */
+@keyframes kayoriFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kayori-fade-in {
+  animation: kayoriFadeIn 0.7s ease-out forwards;
+}
+
+.kayori-fade-in-delay-1 {
+  animation: kayoriFadeIn 0.7s ease-out 0.1s both;
+}
+
+.kayori-fade-in-delay-2 {
+  animation: kayoriFadeIn 0.7s ease-out 0.2s both;
+}
+
+.kayori-fade-in-delay-3 {
+  animation: kayoriFadeIn 0.7s ease-out 0.35s both;
+}
+
+.kayori-fade-in-delay-4 {
+  animation: kayoriFadeIn 0.7s ease-out 0.5s both;
+}
+
+.kayori-fade-in-delay-5 {
+  animation: kayoriFadeIn 0.7s ease-out 0.65s both;
+}
+
+/* Kaili quote box — traditional manuscript feel */
+.kayori-quote-box {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(58, 134, 255, 0.05) 100%);
+  border-left: 4px solid #FFD166;
+  border-radius: 0 16px 16px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.kayori-quote-box::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  font-size: 80px;
+  color: rgba(255, 209, 102, 0.12);
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Translation box */
+.kayori-translation-box {
+  background: linear-gradient(135deg, rgba(6, 214, 160, 0.07) 0%, rgba(20, 28, 51, 0.4) 100%);
+  border: 1px solid rgba(6, 214, 160, 0.2);
+  border-radius: 16px;
+}
+
+/* Function cards hover effect */
+.kayori-func-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.kayori-func-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(58, 134, 255, 0.12);
+  border-color: rgba(58, 134, 255, 0.35);
+}
+
+/* Elegant divider */
+.kayori-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  margin: 0;
+  border: none;
+}
+
+/* Heritage badge */
+.kayori-heritage-badge {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.15), rgba(239, 71, 111, 0.08));
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  color: #FFD166;
+}
+
+/* Category card hover for encyclopedia landing */
+.encyclo-cat-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.encyclo-cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode overrides for Kayori */
+.light-mode .kayori-quote-box {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.12) 0%, rgba(248, 250, 252, 0.6) 100%);
+}
+
+.light-mode .kayori-translation-box {
+  background: linear-gradient(135deg, rgba(6, 214, 160, 0.08) 0%, rgba(255, 255, 255, 0.7) 100%);
+}
