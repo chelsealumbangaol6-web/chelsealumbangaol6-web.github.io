@@ -1922,7 +1922,7 @@ const translationDictionary = {
   "Status Wilayah:": "Region Status:",
   "Indeks Risiko:": "Risk Index:",
   "Kesiapan & Kualitas Data": "Readiness & Data Quality",
-  "Log Aktivitas Operasi": "Operations Activity Log",
+  "Log Aktivitas Operasi": "Operation Activity Log",
   "REAL-TIME": "REAL-TIME",
   "Kelengkapan: 98%": "Completeness: 98%",
   "Audit Trail: Terverifikasi": "Audit Trail: Verified",
@@ -1980,7 +1980,8 @@ const translationDictionary = {
   "Bujur (Lng)": "Longitude (Lng)",
   "Catatan Operasional & Kebutuhan Darurat": "Operational Notes & Emergency Needs",
   "Kirim Laporan Lapangan": "Send Field Report",
-  "Laporan Operasi Lapangan Aktif": "Active Field Operation Reports",
+  "Kirim Laporan Operasi": "Send Operation Report",
+  "Laporan Operasi Lapangan Aktif": "Active Field Operations Log",
   "TERVERIFIKASI": "VERIFIED",
   "PENDING": "PENDING",
   "Evakuasi": "Evacuation",
@@ -2067,6 +2068,7 @@ const translationDictionary = {
   "Kunci Keamanan API Publik & Kredensial": "Public API Security Key & Credentials",
   "Gunakan kunci API di bawah untuk integrasi sensor stasiun BPBD/BMKG lokal Anda ke portal utama SEDAF.": "Use the API key below to integrate your local BPBD/BMKG station sensors into the main SEDAF portal.",
   "Salin": "Copy",
+  "Komando Lapangan: BNPB / BPBD Daerah": "Field Command: BNPB / BPBD Regional",
   
   // Encyclopedia
   "Warisan Kebencanaan Nusantara": "Nusantara Disaster Heritage",
